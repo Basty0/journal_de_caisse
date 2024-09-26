@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="{% static 'css/inscriptione.css' %}">
+</head>
+<body>
+    <div class="contenaire">
+         
+        <form action="{% url 'connexion' %}" method="POST"> 
+            {% csrf_token %}       
+                 
+         <div class="loginhead">
+             <span>Se-Connecter</span>
+        </div>
+        <br>
+    <br>
+    <br>
+        <label for="{{ form.username.id_for_label }}">Nom d'utilisateur :</label>
+        {{ form.username }}
+          <br>
+    <br>
+    <br>
+        <label for="{{ form.password.id_for_label }}">Mot de passe :</label>
+        {{ form.password }}
+    <br>
+    <br>
+            <input class="btn"    type="submit" value="Connexion">
+             
+             <div class="registre">
+    
+            <span class="insc">Vous n'avez pas de compte? <a href="{% url 'inscription' %}">S'inscrire</a></span>
+    
+            </div>
+            
+        </form>
+    
+        </div>
+</body>
+</html>

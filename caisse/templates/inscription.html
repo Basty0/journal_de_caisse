@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription</title>
+    <link rel="stylesheet" href="{% static 'css/inscriptione.css' %}">
+</head>
+<body>
+    <div class="contenaire"> 
+        <form action="{% url 'inscription' %}" method="POST">
+               {% csrf_token %}
+               <div class="loginhead">
+                   <span> Inscription</span>
+              </div>
+          
+                  <input class="champ" type="text" placeholder="username" name="username" required><br>
+                
+          
+                  <input class="champ" type="password" placeholder="password" name="password" required><br>
+       
+               <div class="email">
+                  <input class="champ"  id="email"   type="email" placeholder="email" name="email" required><br>
+               </div>
+       
+               <div class="bouton">
+                  <input class="btn" type="submit" value="S'inscrire">
+               </div>  
+               
+               
+                  
+               <div class="registre">
+                   <span class="insc">Vous avez  deja un compte? <a href="{% url 'connexion' %}">Connexion</a></span>
+               </div>
+                  
+              </form>
+          
+       </div> 
+</body>
+</html>

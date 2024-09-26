@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceuil</title>
+    <link rel="stylesheet" href="{% static 'css/aCCEUIL.css' %}">
+    {% csrf_token %}
+</head>
+<body>
+    <h1>BIENVENUE DANS L'ACCEUIL</h1><hr> <br> <br>
+<center
+    <p>Ajouter des <a href="{% url 'personnels' %}">personnels</a></p> <br>
+
+    <p>La liste des personnels <a href="{% url 'personnelsliste' %}">ici</a></p> <br>
+
+    <p>Ajouter les entrées et les sorties <a href="{% url 'ajout_operation' %}">ici</a></p><br>
+
+    <p>La liste des opérations  <a href="{% url 'listeoperation' %}">opérations</a></p><br> 
+
+    <p>Ajouter les <a href="{% url 'fournisseur' %}">fournisseurs</a></p><br> 
+
+    <p>Ajouter les <a href="{% url 'categorie' %}">catégorie</a></p><br> <br> 
+    
+
+    <button style="font-size: medium;" onclick="window.location.href='{% url 'deconnexion' %}'">Se déconnecter</button>
+    </center>
+</body>
+</html>

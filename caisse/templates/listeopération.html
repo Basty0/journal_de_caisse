@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Opérations</title>
+    {% csrf_token %}
+</head>
+<body>
+  <center>
+    <header>
+        <h1 style="width: auto;">Liste des Opérations</h1>
+       
+    </header>
+    </center>
+
+    <!-- Formulaire de recherche -->
+    <form method="GET" action="" width="100%" style="display: flex; justify-content: flex-end;">
+        <input type="text" name="q" placeholder="Rechercher un personnel" value="{{ request.GET.q }}">
+        <button type="submit">Rechercher</button>
+     </form>
+
+     <center>
+    <div class="container">
+        <table style="border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid black;">Description</th>
+                    <th style="border: 1px solid black;">Catégorie</th>
+                    <th style="border: 1px solid black;">Bénéficiaires</th>
+                    <th style="border: 1px solid black;">Fournisseurs</th>
+                    <th style="border: 1px solid black;">Date</th>
+                    <th style="border: 1px solid black;">Quantité</th>
+                    <th style="border: 1px solid black;">Somme</th>
+                    <th style="border: 1px solid black;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for x in operations %}
+                <tr>
+                    <td style="border: 1px solid black;"> <a style="text-decoration: none">{{ x.description }}</a></td>
+                    <td style="border: 1px solid black;">{{ x.categorie_id.name }}</td>
+                    <td style="border: 1px solid black;">{{ x. }}</td>
+                    <td style="border: 1px solid black;">{{ x.fournisseur.name }}</td>
+                    <td style="border: 1px solid black;">{{ x.date }}</td>
+                    <td style="border: 1px solid black;">{{ x. }}</td>
+                    <td style="border: 1px solid black;">{{ x.montant }} {{ prix }}</td>
+                    <td style="border: 1px solid black;">
+                        <a style="text-decoration: none" href="{% url 'modifier_entrer' x.id %}">Modifier</a>
+                        <form action="{% url 'delete_entrer' x.id %}" method="POST" style="display: inline-block">
+                            {% csrf_token %}
+                            <input type="submit" value="Supprimer" alt="Supprimer">
+                        </form>
+                    </td>
+
+                    
+            </tr>
+                 
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>Ajouter une  <a style="text-decoration: none" href="{% url 'ajout_operation' %}">nouvelle opération</a></p> <br>
+            <p>Revenir <a style="text-decoration: none" href="{% url 'acceuil' %}">à l'acceuil</a></p> 
+            <button style="font-size: medium;" onclick="window.location.href='{% url 'deconnexion' %}'">Se déconnecter</button>
+
+        </center>
+        
+    </body>
+

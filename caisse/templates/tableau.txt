@@ -1,0 +1,51 @@
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des salariés</title>
+      {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>Liste des salariés</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Photo</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Date de naissance</th>
+                <th>Poste</th>
+                <th>Département</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+            <tr>
+                <td><img src="{{ employee.photo.url }}" alt="{{ employee.nom }}"></td>
+                <td>{{ employee.nom }} {{ employee.prenom }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.date_naissance }}</td>
+                <td>{{ employee.poste.nom }}</td>
+                <td>{{ employee.poste.departement.nom }}</td>
+                <td><a href="{% url 'employee-update' employee.id %}">Modifier</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'employee-create' %}">Ajouter un salarié</a>
+
+     <div class="btn-group mt-4" role="group" aria-label="Basic example">
+        <a href="{% url 'conge-list' %}" class="btn btn-info">Liste des congés</a>
+        <a href="{% url 'profile' %}" class="btn btn-secondary">Profil</a>
+        <a href="{% url 'payroll_list' %}" class="btn btn-success">Liste des fiches de paie</a>
+        <a href="{% url 'employee-list' %}" class="btn btn-warning">Liste des employés</a>
+    </div>
+</div>
+</body>
+</html>

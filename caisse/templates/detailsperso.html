@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails sur {{ x.last_name }} </title>
+</head>
+<body>
+    <center>
+    <h1>DETAILS sur {{ x.last_name }} </h1><br>
+
+    <h2>{{ x.last_name }} {{ x.first_name }}</h2>
+    <img src="{{ x.photo.url }}" alt="{{ x.last_name }}" width="150">
+    <p>Phone: {{ x.tel }}</p>
+    <p>Email: {{ x.email }}</p>
+    <p>Date de naissance: {{ x.date_naissance }}</p>
+    <p>Adresse: {{ x.adresse }}</p>
+    <p>Date d'embauche: {{ x.date_embauche }}</p>
+    <p>Type de personnel: {{ x.type_personnel }}</p>
+    <p>Genre: {{ x.sexe }}</p>
+    <p>Phone: {{ x.tel }}</p>
+    
+    <a style="text-decoration: none" href="{% url 'modifier_personnel' x.id %}">Modifier</a>
+    <p>Back to <a href="{% url 'personnelsliste' %}">Listes des personnels</a></p>
+</center>
+    </body>
+    </html>

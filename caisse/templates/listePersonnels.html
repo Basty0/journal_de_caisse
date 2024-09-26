@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La listes des personnels</title>
+    {% csrf_token %}
+</head>
+<body>
+  <center>
+    <header>
+        <h1 style="width: auto;">Liste des personnels</h1>
+       
+    </header>
+    </center>
+
+     <!-- Formulaire de recherche -->
+     <form method="GET" action="" width="100%" style="display: flex; justify-content: flex-end;">
+        <input type="text" name="q" placeholder="Rechercher un personnel" value="{{ request.GET.q }}">
+        <button type="submit">Rechercher</button>
+     </form>
+
+    <center>
+    <div class="container">
+        <table style="border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="border: 1px solid black;">Nom</th>
+                    <th style="border: 1px solid black;">Email</th>
+                    <th style="border: 1px solid black;">Date de début de service</th>
+                    <th style="border: 1px solid black;">Type de personnels</th>
+                    <th style="border: 1px solid black;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for x in personnels %}
+                <tr>
+                    <td style="border: 1px solid black;"> <a style="text-decoration: none" href="details/{{ x.id }}">{{ x.last_name }} {{ x.first_name }}</a></td>
+                    <td style="border: 1px solid black;">{{ x.email }}</td>
+                    <td style="border: 1px solid black;">{{ x.date_embauche|date:"d M Y" }}</td>
+                    <td style="border: 1px solid black;">{{ x.type_personnel }}</td>
+                    <td style="border: 1px solid black;">
+                        <a style="text-decoration: none" href="{% url 'modifier_personnel' x.id %}" alt="Modifier les information de {{ x.id }}">Modifier</a>
+                        <form action="{% url 'delete_personnel' x.id %}" method="POST" style="display: inline-block">
+                            {% csrf_token %}
+                            <input type="submit" value="Supprimer" alt="Supprimer">
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">Aucun personnel trouvé.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>Ajouter un  <a style="text-decoration: none" href="{% url 'personnels' %}">nouveau personnel</a></p> <br>
+            <p>Revenir <a style="text-decoration: none" href="{% url 'acceuil' %}">à l'acceuil</a></p> 
+            <button style="font-size: medium;" onclick="window.location.href='{% url 'deconnexion' %}'">Se déconnecter</button>
+
+        </center>
+        
+    </body>
+
