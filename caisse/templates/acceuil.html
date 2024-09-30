@@ -1,14 +1,6 @@
-{% load static tailwind_tags %}
-...
-<head>
-   ...
-   {% tailwind_css %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceuil</title>
-    <link rel="stylesheet" href="{% static 'css/aCCEUIL.css' %}">
-    {% csrf_token %}
-</head>
+{% extends 'Layout/layout.html' %}
+
+{% block content %}
 <body>
     <h1 class="text-4xl text-green-500">BIENVENUE DANS L'ACCEUIL</h1><hr> <br> <br>
 <center
@@ -29,3 +21,4 @@
     </center>
 </body>
 </html>
+{% endblock %}
