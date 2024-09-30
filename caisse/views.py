@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm, PersonnelForm, OperationEntrerForm, CategorieForm, FournisseurForm, OperationSortirForm
-from .models import Personnel, OperationEntrer, Categorie, OperationSortir, Fournisseur
+from .models import Personnel, OperationEntrer, Categorie, OperationSortir, Fournisseur, Beneficiaire
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.db.models import Q
@@ -123,27 +123,95 @@ def suppressionp(request, id):
         return redirect('personnelsliste')
 
 def listes_operations(request):
-    query = request.GET.get('q')  # Récupérer le terme de recherche depuis l'URL
+    # Récupérer les filtres de recherche et de triage
+    query = request.GET.get('q')
+    categorie_id = request.GET.get('categorie')
+    beneficiaire_id = request.GET.get('beneficiaire')
+    fournisseur_id = request.GET.get('fournisseur')
+    montant_min = request.GET.get('montant_min')
+    montant_max = request.GET.get('montant_max')
+    date_min = request.GET.get('date_min')
+    date_max = request.GET.get('date_max')
+    quantite_min = request.GET.get('quantite_min')
+    quantite_max = request.GET.get('quantite_max')
+
+    # Récupérer le critère de tri (par défaut, tri par date)
+    sort_by = request.GET.get('sort', 'date')  # Trier par date par défaut
+
+    # Filtrer les opérations d'entrée
+    entree = OperationEntrer.objects.all()
+    sortie = OperationSortir.objects.all()
+
     if query:
-        operations = OperationEntrer.objects.filter(
+        # Filtrer les résultats selon le terme de recherche
+        entree = OperationEntrer.objects.filter(
             Q(description__icontains=query) | 
             Q(categorie__name__icontains=query) |
             Q(montant__icontains=query) | 
             Q(date__icontains=query)
-        )  # Filtrer les résultats selon le terme de recherche
-    else:
-        entree = OperationEntrer.objects.all()
+        )  
+        sortie = OperationSortir.objects.filter(
+            Q(description__icontains=query) | 
+            Q(categorie__name__icontains=query) |
+            Q(montant__icontains=query) | 
+            Q(date__icontains=query)
+        )
+    if categorie_id:
+        entree = entree.filter(categorie_id=categorie_id)
+        sortie = sortie.filter(categorie_id=categorie_id)
 
-    if entree.exists():
-        template = loader.get_template('listeopération.html')
-        context = {
-            'entree': entree,
-            "prix": "Ar"
-        }
-        return HttpResponse(template.render(context, request))
-    else:
-        # Gérer le cas où aucune opération n'est trouvée
-        return HttpResponse("Aucune opération trouvée avec ce critère de recherche.")
+    if beneficiaire_id:
+        sortie = sortie.filter(beneficiaire_id=beneficiaire_id)
+
+    if fournisseur_id:
+        sortie = sortie.filter(fournisseur_id=fournisseur_id)
+
+    if montant_min:
+        entree = entree.filter(montant__gte=montant_min)
+        sortie = sortie.filter(montant__gte=montant_min)
+
+    if montant_max:
+        entree = entree.filter(montant__lte=montant_max)
+        sortie = sortie.filter(montant__lte=montant_max)
+
+    if date_min:
+        entree = entree.filter(date__gte=date_min)
+        sortie = sortie.filter(date__gte=date_min)
+
+    if date_max:
+        entree = entree.filter(date__lte=date_max)
+        sortie = sortie.filter(date__lte=date_max)
+
+    if quantite_min:
+        sortie = sortie.filter(quantité__gte=quantite_min)
+
+    if quantite_max:
+        sortie = sortie.filter(quantité__lte=quantite_max)
+
+    # Appliquer le triage sur les opérations (catégorie, bénéficiaire, fournisseur, montant, date, quantité)
+    entree = entree.order_by(sort_by)
+    sortie = sortie.order_by(sort_by)
+
+    # Appliquer le triage sur les opérations (catégorie, bénéficiaire, fournisseur, montant, date, quantité)
+    entree = entree.order_by(sort_by)
+    sortie = sortie.order_by(sort_by)
+
+    # Récupérer les catégories, bénéficiaires et fournisseurs pour les options de filtrage
+    categories = Categorie.objects.all()
+    beneficiaires = Beneficiaire.objects.all()
+    fournisseurs = Fournisseur.objects.all()
+    template = loader.get_template('listeopération.html')
+
+    context = {
+        'entree': entree,
+        'sortie': sortie,
+        'categories': categories,
+        'beneficiaires': beneficiaires,
+        'fournisseurs': fournisseurs,
+        'prix': "Ar",
+        'sort_by': sort_by,
+    }
+    return HttpResponse(template.render(context, request))
 
 #Ajouter un catégorie 
 def categorie(request):

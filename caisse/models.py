@@ -107,11 +107,11 @@ class OperationEntrer(models.Model):
 class OperationSortir(models.Model):
     
     description = models.CharField(max_length=255)  # Nom de l'opération
-    montant = models.DecimalField(max_digits=10, decimal_places=2, default=500)  # Montant
+    montant = models.DecimalField(max_digits=10, decimal_places=0, default=500)  # Montant
     date = models.DateField(auto_now_add=True)  # Date de l'ajout dans l'application
     date_de_sortie = models.DateField(default=timezone.now)
     quantité = models.DecimalField(max_digits=10, decimal_places=0, default=1)
-    Categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, null=False)  # Clé étrangère vers Categorie
+    categorie = models.ForeignKey(Categorie, on_delete=models.CASCADE, null=False)  # Clé étrangère vers Categorie
     beneficiaire = models.ForeignKey(Beneficiaire, on_delete=models.CASCADE, null=False) #clé étrangère vers Personnel
     fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE, null=False) #clé étrangère vers Fournisseur
 

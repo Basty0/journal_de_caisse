@@ -1,70 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liste des Opérations</title>
-    {% csrf_token %}
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
+
   <center>
     <header>
         <h1 style="width: auto;">Liste des Opérations</h1>
-       
     </header>
-    </center>
+  </center>
 
-    <!-- Formulaire de recherche -->
-    <form method="GET" action="" width="100%" style="display: flex; justify-content: flex-end;">
-        <input type="text" name="q" placeholder="Rechercher un personnel" value="{{ request.GET.q }}">
-        <button type="submit">Rechercher</button>
-     </form>
+  <!-- Formulaire de recherche -->
+  <form method="GET" action="" width="100%" style="display: flex; justify-content: flex-end; display: inline-block; margin-block-end: auto;">
+      <input type="text" name="q" placeholder="Rechercher une opération" value="{{ request.GET.q }}"><br>
+      <button type="submit">Rechercher</button>
+      <center>
+    </form>
 
-     <center>
+    <form action="" method="get" width="100%" style="display: flex;">
+        <!-- Filtrer par catégorie -->
+      <select name="categorie">
+        <option value="">Toutes catégories</option>
+        {% for categorie in categories %}
+            <option value="{{ categorie.id }}" {% if request.GET.categorie == categorie.id|stringformat:"s" %}selected{% endif %}>{{ categorie.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Filtrer par bénéficiaire -->
+    <select name="beneficiaire">
+        <option value="">Tous bénéficiaires</option>
+        {% for beneficiaire in beneficiaires %}
+            <option value="{{ beneficiaire.id }}" {% if request.GET.beneficiaire == beneficiaire.id|stringformat:"s" %}selected{% endif %}>{{ beneficiaire.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Filtrer par fournisseur -->
+    <select name="fournisseur">
+        <option value="">Tous fournisseurs</option>
+        {% for fournisseur in fournisseurs %}
+            <option value="{{ fournisseur.id }}" {% if request.GET.fournisseur == fournisseur.id|stringformat:"s" %}selected{% endif %}>{{ fournisseur.name }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Filtrer par montant -->
+    <input type="number" name="montant_min" placeholder="Montant minimum" value="{{ request.GET.montant_min }}">
+    <input type="number" name="montant_max" placeholder="Montant maximum" value="{{ request.GET.montant_max }}">
+
+    <!-- Filtrer par date -->
+    <input type="date" name="date_min" placeholder="Date de début" value="{{ request.GET.date_min }}">
+    <input type="date" name="date_max" placeholder="Date de fin" value="{{ request.GET.date_max }}">
+
+    <!-- Filtrer par quantité -->
+    <input type="number" name="quantite_min" placeholder="Quantité minimum" value="{{ request.GET.quantite_min }}">
+    <input type="number" name="quantite_max" placeholder="Quantité maximum" value="{{ request.GET.quantite_max }}">
+        <button type="submit">Filtrer</button>
+    </form>
+      </center>
+   <center>
     <div class="container">
-        <table style="border-collapse: collapse;">
+        <table>
             <thead>
                 <tr>
-                    <th style="border: 1px solid black;">Description</th>
-                    <th style="border: 1px solid black;">Catégorie</th>
-                    <th style="border: 1px solid black;">Bénéficiaires</th>
-                    <th style="border: 1px solid black;">Fournisseurs</th>
-                    <th style="border: 1px solid black;">Date</th>
-                    <th style="border: 1px solid black;">Quantité</th>
-                    <th style="border: 1px solid black;">Somme</th>
-                    <th style="border: 1px solid black;">Actions</th>
+                    <th>Description</th>
+                    <th>Catégorie</th>
+                    <th>Bénéficiaire</th>
+                    <th>Fournisseurs</th>
+                    <th>Date</th>
+                    <th>Quantité</th>
+                    <th>Montant</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                {% for x in operations %}
+                <!-- Affichage des opérations d'entrée -->
+                {% for operation in entree %}
                 <tr>
-                    <td style="border: 1px solid black;"> <a style="text-decoration: none">{{ x.description }}</a></td>
-                    <td style="border: 1px solid black;">{{ x.categorie_id.name }}</td>
-                    <td style="border: 1px solid black;">{{ x. }}</td>
-                    <td style="border: 1px solid black;">{{ x.fournisseur.name }}</td>
-                    <td style="border: 1px solid black;">{{ x.date }}</td>
-                    <td style="border: 1px solid black;">{{ x. }}</td>
-                    <td style="border: 1px solid black;">{{ x.montant }} {{ prix }}</td>
-                    <td style="border: 1px solid black;">
-                        <a style="text-decoration: none" href="{% url 'modifier_entrer' x.id %}">Modifier</a>
-                        <form action="{% url 'delete_entrer' x.id %}" method="POST" style="display: inline-block">
+                    <td>{{ operation.description }}</td>
+                    <td>{{ operation.categorie.name }}</td>
+                    <td>vide</td>
+                    <td>vide</td>
+                    <td>{{ operation.date }}</td>
+                    <td>vide</td>
+                    <td>{{ operation.montant }} {{ prix }}</td>
+                    <td>
+                        <a href="{% url 'modifier_entrer' operation.id %}">Modifier</a>
+                        <form action="{% url 'delete_entrer' operation.id %}" method="POST" style="display: inline-block;">
                             {% csrf_token %}
-                            <input type="submit" value="Supprimer" alt="Supprimer">
+                            <input type="submit" value="Supprimer">
                         </form>
                     </td>
-
-                    
-            </tr>
-                 
+                </tr>
+                {% endfor %}
+                
+                <!-- Affichage des opérations de sortie -->
+                {% for operation in sortie %}
+                <tr>
+                    <td>{{ operation.description }}</td>
+                    <td>{{ operation.categorie.name }}</td>
+                    <td>{{ operation.beneficiaire.name }}</td>
+                    <td>{{ operation.fournisseur.name }}</td>
+                    <td>{{ operation.date }}</td>
+                    <td>{{ operation.quantité }}</td>
+                    <td>{{ operation.montant }} {{ prix }}</td>
+                    <td>
+                        <a href="{% url 'modifier_sortie' operation.id %}">Modifier</a>
+                        <form action="{% url 'delete_sortie' operation.id %}" method="POST" style="display: inline-block;">
+                            {% csrf_token %}
+                            <input type="submit" value="Supprimer">
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <p>Ajouter une  <a style="text-decoration: none" href="{% url 'ajout_operation' %}">nouvelle opération</a></p> <br>
-            <p>Revenir <a style="text-decoration: none" href="{% url 'acceuil' %}">à l'acceuil</a></p> 
-            <button style="font-size: medium;" onclick="window.location.href='{% url 'deconnexion' %}'">Se déconnecter</button>
 
-        </center>
-        
-    </body>
-
+        <p>Ajouter une <a href="{% url 'ajout_operation' %}">nouvelle opération</a></p>
+        <p>Revenir <a href="{% url 'acceuil' %}">à l'accueil</a></p>
+        <button onclick="window.location.href='{% url 'deconnexion' %}'">Se déconnecter</button>
+    </div>
+   </center>
+</body>
+</html>
