@@ -7,7 +7,7 @@ from .forms import LoginForm, PersonnelForm, OperationEntrerForm, CategorieForm,
 from .models import Personnel, OperationEntrer, Categorie, OperationSortir, Fournisseur
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
-from django.db.models import Sum, Q
+from django.db.models import Q
 
 
 #Pour forcé la connexion avant d'aller dans l'acceuil
@@ -132,12 +132,12 @@ def listes_operations(request):
             Q(date__icontains=query)
         )  # Filtrer les résultats selon le terme de recherche
     else:
-        operations = OperationEntrer.objects.all()
+        entree = OperationEntrer.objects.all()
 
-    if operations.exists():
+    if entree.exists():
         template = loader.get_template('listeopération.html')
         context = {
-            'operations': operations,
+            'entree': entree,
             "prix": "Ar"
         }
         return HttpResponse(template.render(context, request))
