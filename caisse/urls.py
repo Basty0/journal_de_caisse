@@ -23,7 +23,8 @@ urlpatterns = [
     path('Ajouts_Sortie/', views.ajouter_sortie,name='ajout_sortie'),
     path('Listes_des_Opérations/modifier-sortie/<int:pk>/', views.modifier_sortie, name='modifier_sortie'),
     path('Listes_des_Opérations//delete/<int:id>/', views.suppression_sortie, name='delete_sortie'),
-
+    path('generer-excel/', views.generer_excel_operations, name='generer_excel_operations'),
+    path('generer-pdf/', views.generer_pdf_operations, name='generer_pdf_operations'),
 ]
 
 if settings.DEBUG:
