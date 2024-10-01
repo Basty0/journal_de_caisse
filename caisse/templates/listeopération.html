@@ -132,7 +132,8 @@
                 {% endfor %}
             </tbody>
         </table>
-
+        <a href="{% url 'generer_excel_operations' %}" class="btn btn-success">Télécharger l'Excel</a><br>
+        <a href="{% url 'generer_pdf_operations' %}" class="btn btn-primary">Télécharger le PDF</a>
         <p>Ajouter une <a href="{% url 'ajout_operation' %}">nouvelle opération</a></p>
         <p>Revenir <a href="{% url 'acceuil' %}">à l'accueil</a></p>
         <button onclick="window.location.href='{% url 'deconnexion' %}'">Se déconnecter</button>
