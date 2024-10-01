@@ -15,6 +15,10 @@ from datetime import datetime # Importer datetime pour obtenir la date et l'heur
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
+from django.core.management import call_command
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import os
 
 
 #Pour forcé la connexion avant d'aller dans l'acceuil
@@ -142,7 +146,7 @@ def listes_operations(request):
     quantite_min = request.GET.get('quantite_min')
     quantite_max = request.GET.get('quantite_max')
 
-    # Récupérer le critère de tri (par défaut, tri par date)
+   
     sort_by = request.GET.get('sort', 'date')  # Trier par date par défaut
 
     # Filtrer les opérations d'entrée
@@ -462,3 +466,46 @@ def generer_pdf_operations(request):
     p.save()
 
     return response
+
+
+# Vue pour exporter les données (sauvegarde)
+def export_data(request):
+    # Chemin du fichier de sauvegarde
+    file_path = 'backup.json'
+
+    # Exécuter la commande dumpdata pour sauvegarder toutes les données
+    with open(file_path, 'w') as f:
+        call_command('dumpdata', format='json', indent=4, stdout=f)
+
+    # Lire le fichier de sauvegarde et renvoyer comme réponse HTTP
+    with open(file_path, 'rb') as f:
+        response = HttpResponse(f.read(), content_type='application/json')
+        response['Content-Disposition'] = 'attachment; filename=backup.json'
+    
+    # Supprimer le fichier après téléchargement
+    os.remove(file_path)
+
+    return response
+
+# Vue pour importer les données (restauration)
+def import_data(request):
+    if request.method == 'POST' and 'backup_file' in request.FILES:
+        # Récupérer le fichier téléchargé
+        backup_file = request.FILES['backup_file']
+
+        # Enregistrer temporairement le fichier JSON
+        file_path = default_storage.save('temp_backup.json', ContentFile(backup_file.read()))
+
+        # Charger les données dans la base de données en utilisant la commande loaddata
+        try:
+            call_command('loaddata', file_path)
+            message = "Les données ont été restaurées avec succès."
+        except Exception as e:
+            message = f"Erreur lors de la restauration des données: {str(e)}"
+        
+        # Supprimer le fichier temporaire
+        default_storage.delete(file_path)
+
+        return HttpResponse(message)
+
+    return render(request, 'import_data.html')

@@ -1,24 +1,95 @@
 {% extends 'Layout/layout.html' %}
 
 {% block content %}
-<body>
-    <h1 class="text-4xl text-green-500">BIENVENUE DANS L'ACCEUIL</h1><hr> <br> <br>
-<center
-    <p class="text-2xl text-blue-500">Ajouter des <a href="{% url 'personnels' %}">personnels</a></p> <br>
+<body class="bg-gray-100">
+    <h1 class="text-4xl text-green-500 text-center mt-8">BIENVENUE DANS
+        L'ACCEUIL</h1><hr> <br>
+    <br>
+    <div class="flex justify-center items-center">
+        <form method="post" enctype="multipart/form-data"
+            class="bg-white shadow-md rounded-xl px-8 pt-6 pb-8 mb-4"
+            style="padding: 20px;">
+            {% csrf_token %}
+            <label for="backup_file"
+                class="block text-gray-700 text-sm font-bold mb-2">Sélectionnez
+                le fichier JSON pour restaurer
+                :</label>
+            <input type="file" name="backup_file" id="backup_file" required
+                class="shadow appearance-none border rounded-full w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <button type="submit"
+                class="bg-blue-500 hover:bg-blue-700  font-bold py-2 px-4 rounded-full mt-4">Restaurer</button>
+        </form>
+    </div>
+    <div class="flex justify-center items-center">
 
-    <p class="text-2xl">La liste des personnels <a href="{% url 'personnelsliste' %}">ici</a></p> <br>
+        <div class="pt-10">
+            <a href="{% url 'export_data' %}">
+                <button type="button"
+                    class="bg-blue-500 hover:bg-blue-700  f py-2 px-4 rounded-full mt-4">Exporter
+                    les données
+                    en CSV</button>
+            </a>
+        </div>
+    </div>
 
-    <p>Ajouter les entrées et les sorties <a href="{% url 'ajout_operation' %}">ici</a></p><br>
+    <div class="grid grid-cols-4 lg:grid-cols-3 md:grid-cols-2 gap-4 ">
 
-    <p>La liste des opérations  <a href="{% url 'listeoperation' %}">opérations</a></p><br> 
+        <!-- Bouton d'exportation -->
 
-    <p>Ajouter les <a href="{% url 'fournisseur' %}">fournisseurs</a></p><br> 
+        <div class="mt-10">
+            <a href="{% url 'personnels' %}">
+                <button type="button"
+                    class="bg-blue-500 hover:bg-blue-700  f py-2 px-4 rounded-full mt-4">Ajouter
+                    des personnels</button>
+            </a>
+        </div>
 
-    <p>Ajouter les <a href="{% url 'categorie' %}">catégorie</a></p><br> <br> 
-    
+        <div class="mt-10">
+            <a href="{% url 'personnelsliste' %}">
+                <button type="button"
+                    class="bg-blue-500 hover:bg-blue-700  f py-2 px-4 rounded-full mt-4">La
+                    liste des personnels</button>
+            </a>
+        </div>
 
-    <button style="font-size: medium;" onclick="window.location.href='{% url 'deconnexion' %}'">Se déconnecter</button>
-    </center>
+        <div class="mt-10">
+            <a href="{% url 'ajout_operation' %}">
+                <button type="button"
+                    class="bg-blue-500 hover:bg-blue-700  f py-2 px-4 rounded-full mt-4">Ajouter
+                    les entrées et les sorties</button>
+            </a>
+        </div>
+
+        <div class="mt-10">
+            <a href="{% url 'listeoperation' %}">
+                <button type="button"
+                    class="bg-blue-500 hover:bg-blue-700  f py-2 px-4 rounded-full mt-4">La
+                    liste des opérations</button>
+            </a>
+        </div>
+
+        <div class="mt-10">
+            <a href="{% url 'fournisseur' %}">
+                <button type="button"
+                    class="bg-blue-500 hover:bg-blue-700  f py-2 px-4 rounded-full mt-4">Ajouter
+                    les fournisseurs</button>
+            </a>
+        </div>
+
+        <div class="mt-10">
+            <a href="{% url 'categorie' %}">
+                <button type="button"
+                    class="bg-blue-500 hover:bg-blue-700  f py-2 px-4 rounded-full mt-4">Ajouter
+                    les catégories</button>
+            </a>
+        </div>
+
+        <div class="mt-10">
+            <button onclick="window.location.href='{% url 'deconnexion' %}'"
+                class="bg-red-500 hover:bg-red-700  f py-2 px-4 rounded-full mt-4">Se
+                déconnecter</button>
+        </div>
+    </div>
+
 </body>
-</html>
 {% endblock %}

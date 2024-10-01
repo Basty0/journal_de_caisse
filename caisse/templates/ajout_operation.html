@@ -1,11 +1,13 @@
-{% extends 'Layout/layout.html' %}
-{% extends 'Layout/layout.html' %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Ajouter des Opérations</title>
+    </head>
+    <body>
+        <h1>Pour ajouter les entrées et sorties</h1>
+        <p>Ajoutez des <a href="{% url 'ajout_entrer' %}">entrées</a></p><br>
 
-{% block content %}
-<body>
-    <h1>Pour ajouter les entrées et sorties</h1>
-    <p>Ajoutez des <a href="{% url 'ajout_entrer' %}">entrées</a></p><br>
-
-    <p>Ajoutez des <a href="{% url 'ajout_sortie' %}">sorties</a></p><br>
-</body>
-{% endblock %}
+        <p>Ajoutez des <a href="{% url 'ajout_sortie' %}">sorties</a></p><br>
+    </body>
+</html>

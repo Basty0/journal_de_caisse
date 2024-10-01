@@ -25,6 +25,10 @@ urlpatterns = [
     path('Listes_des_Opérations//delete/<int:id>/', views.suppression_sortie, name='delete_sortie'),
     path('generer-excel/', views.generer_excel_operations, name='generer_excel_operations'),
     path('generer-pdf/', views.generer_pdf_operations, name='generer_pdf_operations'),
+
+
+    path('export/', views.export_data, name='export_data'),
+    path('import/', views.import_data, name='import_data'),
 ]
 
 if settings.DEBUG:
