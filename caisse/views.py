@@ -331,51 +331,27 @@ def generer_excel_operations(request):
     sheet.title = "Liste des Opérations"
 
     # Définir les en-têtes
-    headers = ["Type", "Description", "Catégorie", "Bénéficiaire", "Fournisseurs", "Date", "Quantité", "Montant"]
+    headers = ["Type", "Description", "Montant", "Date", "Bénéficiaire", "Fournisseur", "Quantité"]
     sheet.append(headers)
 
-     # Appliquer un style aux en-têtes
-    for col in sheet.iter_cols(min_row=1, max_row=1, min_col=1, max_col=len(headers)):
-        for cell in col:
-            cell.font = Font(bold=True, color="FFFFFF")
-            cell.alignment = Alignment(horizontal="center")
-            cell.fill = openpyxl.styles.PatternFill("solid", fgColor="4F81BD")  # Fond bleu
-
-     # Style des bordures
-    thin_border = Border(left=Side(style='thin'), right=Side(style='thin'),
-                         top=Side(style='thin'), bottom=Side(style='thin'))
-
-    # Récupérer les données de la base de données
     def ajouter_operations(operations, type_operation, avec_beneficiaire=False):
         """Ajouter des opérations au fichier Excel."""
         for operation in operations:
-            # Vérifier si l'opération a un bénéficiaire ou un fournisseur
             beneficiaire = operation.beneficiaire.name if avec_beneficiaire else "N/A"
             fournisseur = operation.fournisseur.name if avec_beneficiaire else "N/A"
             quantite = operation.quantité if avec_beneficiaire else "N/A"
-            sheet.append([type_operation, operation.description, operation.categorie.name, beneficiaire, fournisseur, operation.date, quantite, operation.montant])
+            row = [type_operation, operation.description, operation.montant, operation.date, beneficiaire, fournisseur, quantite]
+            sheet.append(row)
 
     # Ajouter les opérations d'entrée et de sortie
     ajouter_operations(OperationEntrer.objects.all(), "Entrée")
     ajouter_operations(OperationSortir.objects.all(), "Sortie", avec_beneficiaire=True)
 
-     # Ajuster automatiquement la largeur des colonnes
-    for column_cells in sheet.columns:
-        length = max(len(str(cell.value)) for cell in column_cells)
-        sheet.column_dimensions[column_cells[0].column_letter].width = length + 2
-
-    # Créer un tableau structuré
-    tableau = Table(displayName="TableauOperations", ref=f"A1:G{sheet.max_row}")
-    style = TableStyleInfo(name="TableStyleMedium9", showFirstColumn=False,
-                           showLastColumn=False, showRowStripes=True, showColumnStripes=True)
-    tableau.tableStyleInfo = style
-    sheet.add_table(tableau)
-
-     # Obtenir la date et l'heure actuelles
+    # Obtenir la date et l'heure actuelles
     now = datetime.now().strftime('%d-%m-%Y_%H-%M')
-    
-    # Créer la réponse HTTP pour le fichier Excel
-    filename = f"Rapport_de_{now}.xlsx"
+
+    # Créer la réponse HTTP pour le fichier Excel avec date et heure dans le nom du fichier
+    filename = f"rapport_operations_{now}.xlsx"
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
