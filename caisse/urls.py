@@ -20,7 +20,7 @@ urlpatterns = [
     path('Catégorie/', views.categorie, name='categorie'),
 
     #Fournisseur
-    path('Fournisseur/', views.fournisseur, name='fournisseur'),
+    path('Fournisseur/', views.ajouter_fournisseur, name='fournisseur'),
 
     #Les pages des opérations (liste des opérations et la page pour ajouter les )
     path('Ajouts-des-Opérations/', views.ajouts_operations, name='ajout_operation'),

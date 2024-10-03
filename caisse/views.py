@@ -20,7 +20,12 @@ from django.core.files.base import ContentFile
 from reportlab.lib.styles import getSampleStyleSheet
 from django.contrib.auth.decorators import permission_required
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer
+from rest_framework import status
+from django.utils import timezone
+from datetime import timedelta
+from django.db.models import Sum
 
 
 #Pour forcé la connexion avant d'aller dans l'acceuil
@@ -237,6 +242,8 @@ def categorie(request):
         form = CategorieForm()
     return render(request, 'categorie.html', {'form': form})
 
+@api_view(['POST'])
+@renderer_classes([JSONRenderer])
 def ajouter_fournisseur(request):
     if request.method == 'POST':
         try:
@@ -530,6 +537,7 @@ def import_data(request):
 
 # START: New dashboard data API endpoint
 @api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def dashboard_data(request):
     # Get the current date
     today = timezone.now().date()
@@ -577,6 +585,7 @@ def dashboard_data(request):
 # END: New dashboard data API endpoint
 
 @api_view(['GET'])
+@renderer_classes([JSONRenderer])
 def filter_operations(request):
     query = request.GET.get('q', '')
     categorie_id = request.GET.get('categorie')
@@ -659,6 +668,7 @@ def filter_operations(request):
     return HttpResponse(json_data, content_type='application/json')
 
 @api_view(['POST'])
+@renderer_classes([JSONRenderer])
 def api_register(request):
     if request.method == 'POST':
         username = request.data.get('username')
@@ -670,6 +680,7 @@ def api_register(request):
         return Response({"error": "Données invalides"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
+@renderer_classes([JSONRenderer])
 def api_login(request):
     username = request.data.get('username')
     password = request.data.get('password')
@@ -680,6 +691,7 @@ def api_login(request):
     return Response({"error": "Identifiants invalides"}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['POST'])
+@renderer_classes([JSONRenderer])
 def api_logout(request):
     logout(request)
     return Response({"message": "Déconnexion réussie"})
