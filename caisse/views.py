@@ -13,12 +13,18 @@ from openpyxl.styles import Font, Alignment, Border, Side
 from openpyxl.worksheet.table import Table, TableStyleInfo
 from datetime import datetime # Importer datetime pour obtenir la date et l'heure actuelles
 from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
 from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.pdfgen import canvas
 from django.core.management import call_command
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import os
+from reportlab.lib.styles import getSampleStyleSheet
+from django.contrib.auth.decorators import permission_required
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 
 #Pour forcé la connexion avant d'aller dans l'acceuil
@@ -377,95 +383,85 @@ def generer_excel_operations(request):
     workbook.save(response)
     
     return response
-
-
-def generer_pdf_operations(request):
-    # Créer la réponse HTTP pour le fichier PDF
-    response = HttpResponse(content_type='application/pdf')
     
-    # Obtenir la date et l'heure actuelles pour inclure dans le nom du fichier
-    now = datetime.now().strftime('%d-%m-%Y_%H-%M')
-    filename = f"Rapport_de_{now}.pdf"
-    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+#Pour générer un rapport en PDF (.pdf)
+def generer_pdf_operations(request):
+    try:
+        # Créer la réponse HTTP pour le fichier PDF
+        response = HttpResponse(content_type='application/pdf')
 
-    # Créer un objet canvas pour le fichier PDF
-    p = canvas.Canvas(response, pagesize=A4)
-    p.setTitle("Rapport des Opérations")
+        # Obtenir la date et l'heure actuelles pour inclure dans le nom du fichier
+        now = datetime.now().strftime('%d-%m-%Y_%H-%M')
+        filename = f"Rapport_de_{now}.pdf"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
-    # Variables pour la mise en page
-    width, height = A4
-    y_position = height - 50  # Position initiale (top de la page)
-    line_height = 14  # Hauteur entre les lignes
+        # Créer un document PDF
+        pdf = SimpleDocTemplate(response, pagesize=A4)
+        elements = []
 
-    # Ajouter le titre du rapport
-    p.setFont("Helvetica-Bold", 16)
-    p.drawString(100, y_position, f"Rapport des Opérations - {now}")
-    y_position -= 40
+        # Obtenir un style pour les paragraphes
+        styles = getSampleStyleSheet()
+        style_normal = styles['Normal']
 
-    # Fonction pour ajouter les informations d'une opération
-    def ajouter_operation(type_operation, description, categorie, beneficiaire, fournisseur, date, quantite, montant):
-        nonlocal y_position
-        p.setFont("Helvetica-Bold", 12)
-        p.drawString(40, y_position, f"Type d'opération: {type_operation}")
-        y_position -= line_height
+        # Définir les en-têtes du tableau
+        headers = ["Type", "Description", "Catégorie", "Bénéficiaire", "Fournisseur", "Date", "Quantité", "Montant"]
 
-        p.setFont("Helvetica", 10)
-        p.drawString(60, y_position, f"Description : {description}")
-        y_position -= line_height
-        p.drawString(60, y_position, f"Catégorie : {categorie}")
-        y_position -= line_height
-        p.drawString(60, y_position, f"Bénéficiaire : {beneficiaire}")
-        y_position -= line_height
-        p.drawString(60, y_position, f"Fournisseur : {fournisseur}")
-        y_position -= line_height
-        p.drawString(60, y_position, f"Date : {date}")
-        y_position -= line_height
-        p.drawString(60, y_position, f"Quantité : {quantite}")
-        y_position -= line_height
-        p.drawString(60, y_position, f"Montant : {montant}")
-        y_position -= 2 * line_height  # Ajouter un espace après chaque opération
+        # Récupérer les données des opérations d'entrée et de sortie
+        data = [headers]  # Le tableau commence par les en-têtes
 
-    # Récupérer et ajouter les opérations d'entrée
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(40, y_position, "Opérations d'Entrée")
-    y_position -= 20
+        # Récupérer et ajouter les opérations d'entrée
+        operations_entrer = OperationEntrer.objects.all()
+        for operation in operations_entrer:
+            data.append([
+                "Entrée",
+                Paragraph(operation.description, style_normal),  # Retour à la ligne dans la description
+                Paragraph(operation.categorie.name, style_normal),
+                "N/A",  # Pas de bénéficiaire pour les entrées
+                "N/A",  # Pas de fournisseur pour les entrées
+                Paragraph(operation.date.strftime('%d-%m-%Y'), style_normal),
+                "N/A",  # Pas de quantité pour les entrées
+                f"{operation.montant} Ar"
+            ])
 
-    operations_entrer = OperationEntrer.objects.all()
-    for operation in operations_entrer:
-        ajouter_operation(
-            type_operation="Entrée",
-            description=operation.description,
-            categorie=operation.categorie.name,
-            beneficiaire="N/A",  # Pas de bénéficiaire pour les entrées
-            fournisseur="N/A",  # Pas de fournisseur pour les entrées
-            date=operation.date.strftime('%d-%m-%Y'),
-            quantite="N/A",  # Pas de quantité pour les entrées
-            montant=f"{operation.montant} Ar"
-        )
+        # Récupérer et ajouter les opérations de sortie
+        operations_sortir = OperationSortir.objects.all()
+        for operation in operations_sortir:
+            data.append([
+                "Sortie",
+                Paragraph(operation.description, style_normal),  # Retour à la ligne dans la description
+                Paragraph(operation.categorie.name, style_normal),
+                Paragraph(operation.beneficiaire.name if operation.beneficiaire else "N/A", style_normal),
+                Paragraph(operation.fournisseur.name if operation.fournisseur else "N/A", style_normal),
+                Paragraph(operation.date.strftime('%d-%m-%Y'), style_normal),
+                operation.quantité if operation.quantité else "N/A",
+                f"{operation.montant} Ar"
+            ])
 
-    # Récupérer et ajouter les opérations de sortie
-    p.setFont("Helvetica-Bold", 14)
-    p.drawString(40, y_position, "Opérations de Sortie")
-    y_position -= 20
+        # Créer un tableau avec les données
+        tableau = Table(data, colWidths=[1 * inch] * len(headers))
 
-    operations_sortir = OperationSortir.objects.all()
-    for operation in operations_sortir:
-        ajouter_operation(
-            type_operation="Sortie",
-            description=operation.description,
-            categorie=operation.categorie.name,
-            beneficiaire=operation.beneficiaire.name if operation.beneficiaire else "N/A",
-            fournisseur=operation.fournisseur.name if operation.fournisseur else "N/A",
-            date=operation.date.strftime('%d-%m-%Y'),
-            quantite=operation.quantité if operation.quantité else "N/A",
-            montant=f"{operation.montant} Ar"
-        )
+        # Appliquer un style au tableau
+        tableau.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#4F81BD")),  # Couleur de fond des en-têtes
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),  # Couleur du texte des en-têtes
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Texte en gras pour les en-têtes
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Ajout d'espace pour les en-têtes
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Bordures pour tout le tableau
+            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.whitesmoke, colors.lightgrey]),  # Alternance des lignes
+        ]))
 
-    # Finaliser et enregistrer le PDF
-    p.showPage()
-    p.save()
+        # Ajouter le tableau à la liste d'éléments du PDF
+        elements.append(tableau)
 
-    return response
+        # Construire le document PDF
+        pdf.build(elements)
+
+        return response
+
+    except Exception as e:
+        # En cas d'erreur, retourner un JSON avec un message d'erreur
+        return JsonResponse({"status": "error", "message": str(e)})
 
 
 # Vue pour exporter les données (sauvegarde)
