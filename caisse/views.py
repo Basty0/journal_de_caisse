@@ -1,35 +1,26 @@
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
+import os, json, openpyxl
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm, PersonnelForm, OperationEntrerForm, CategorieForm, FournisseurForm, OperationSortirForm
+from .forms import LoginForm, PersonnelForm, OperationEntrerForm, CategorieForm, OperationSortirForm
 from .models import Personnel, OperationEntrer, Categorie, OperationSortir, Fournisseur, Beneficiaire
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from django.db.models import Q
-import openpyxl
-from openpyxl.styles import Font, Alignment, Border, Side
-from openpyxl.worksheet.table import Table, TableStyleInfo
+from openpyxl.worksheet.table import Table
 from datetime import datetime # Importer datetime pour obtenir la date et l'heure actuelles
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
-from reportlab.pdfgen import canvas
 from django.core.management import call_command
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-import os
 from reportlab.lib.styles import getSampleStyleSheet
 from django.contrib.auth.decorators import permission_required
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.renderers import JSONRenderer
-from rest_framework import status
-from django.db.models import Sum
-from django.utils import timezone
-from datetime import timedelta
+from rest_framework.decorators import api_view
 
 
 #Pour forcé la connexion avant d'aller dans l'acceuil
@@ -246,15 +237,26 @@ def categorie(request):
         form = CategorieForm()
     return render(request, 'categorie.html', {'form': form})
 
-def fournisseur(request):
+def ajouter_fournisseur(request):
     if request.method == 'POST':
         try:
-            form = FournisseurForm(request.POST)
-            if form.is_valid():
-                form.save()  # Sauvegarde les données dans la base de données
-                return JsonResponse({"status": "success", "message": "Le fournisseur a été ajouté avec succès."})
-            else:
-                return JsonResponse({"status": "error", "message": "Les données du formulaire ne sont pas valides."})
+            # Charger les données JSON reçues
+            data = json.loads(request.body)
+
+            # Valider les données manuellement
+            name = data.get('name')
+            adresse = data.get('adresse')
+            tel = data.get('tel')
+
+            if not name or not adresse or not tel:
+                return JsonResponse({"status": "error", "message": "Tous les champs sont requis."})
+
+            # Créer un nouvel objet fournisseur et l'enregistrer dans la base de données
+            fournisseur = Fournisseur(name=name, adresse=adresse, tel=tel)
+            fournisseur.save()
+
+            return JsonResponse({"status": "success", "message": "Le fournisseur a été ajouté avec succès."})
+
         except Exception as e:
             return JsonResponse({"status": "error", "message": str(e)})
     else:
