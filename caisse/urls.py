@@ -8,25 +8,37 @@ urlpatterns = [
     path('inscription/', views.register, name= 'inscription'),
     path('connexion/', views.login_view, name= 'connexion' ),
     path('deconnexion/', views.logOut, name="deconnexion"),
-    path('personnels/', views.ajoutperso, name='personnels'),
+
+    #Les urls dédier aux personnels
+    path('ajouts_des_personnels/', views.ajoutperso, name='personnels'),
     path('la_liste_des_personnels/', views.listePersonnels, name='personnelsliste'),
     path('la_liste_des_personnels/details/<int:id>', views.details, name='details'),
     path('la_liste_des_personnels/modifier-personnel/<int:pk>/', views.modifier_personnel, name='modifier_personnel'),
     path('la_liste_des_personnels/delete/<int:id>/', views.suppressionp, name='delete_personnel'),
+
+    #Catégorie
     path('Catégorie/', views.categorie, name='categorie'),
+
+    #Fournisseur
     path('Fournisseur/', views.fournisseur, name='fournisseur'),
+
+    #Les pages des opérations (liste des opérations et la page pour ajouter les )
     path('Ajouts-des-Opérations/', views.ajouts_operations, name='ajout_operation'),
     path('Listes_des_Opérations/', views.listes_operations, name='listeoperation'),
+
+    #Entrée (Ajouts, modifier, supprimer)
     path('Ajouts_Entrer/', views.ajouter_entrer,name='ajout_entrer'),
     path('Listes_des_Opérations/modifier-entrer/<int:pk>/', views.modifier_entrer, name='modifier_entrer'),
-    path('Listes_des_Opérations//delete/<int:id>/', views.suppression_entrer, name='delete_entrer'),
-    path('Ajouts_Sortie/', views.ajouter_sortie,name='ajout_sortie'),
-    path('Listes_des_Opérations/modifier-sortie/<int:pk>/', views.modifier_sortie, name='modifier_sortie'),
-    path('Listes_des_Opérations//delete/<int:id>/', views.suppression_sortie, name='delete_sortie'),
+    path('Listes_des_Opérations//api/delete/<int:id>/', views.suppression_entrer, name='delete_entrer'),
+
+    #Sortie (Ajouts, modifier, supprimer)
+    path('api/Ajouts_Sortie/', views.ajouter_sortie,name='ajout_sortie'),
+    path('api/Listes_des_Opérations/modifier-sortie/<int:pk>/', views.modifier_sortie, name='modifier_sortie'),
+    path('api/Listes_des_Opérations//delete/<int:id>/', views.suppression_sortie, name='delete_sortie'),
     path('generer-excel/', views.generer_excel_operations, name='generer_excel_operations'),
     path('api/generer-pdf/', views.generer_pdf_operations, name='generer_pdf_operations'),
 
-
+#Import et export des données
     path('export/', views.export_data, name='export_data'),
     path('import/', views.import_data, name='import_data'),
 ]

@@ -293,35 +293,53 @@ def modifier_entrer(request, pk):
 # Ajouter Sortie
 def ajouter_sortie(request):
     if request.method == 'POST':
-        form = OperationSortirForm(request.POST)
-        if form.is_valid():
-            form.save()  # Sauvegarde les données dans la base de données
-            return redirect('listeoperation')  # Redirige vers la liste des opérations après l
-        
+        try:
+            form = OperationSortirForm(request.POST)
+            if form.is_valid():
+                form.save()  # Sauvegarde les données dans la base de données
+                return JsonResponse({"status": "success", "message": "La sortie a été ajoutée avec succès."})
+            else:
+                return JsonResponse({"status": "error", "message": "Les données du formulaire ne sont pas valides."})
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)})
     else:
-            form = OperationSortirForm()
-
-    return render(request, 'ajouts_sortie.html', {'form': form})
-
+        return JsonResponse({"status": "error", "message": "La méthode HTTP doit être POST."})
+    
 # Modifier les sorties
 def modifier_sortie(request, pk):
-    sortie = get_object_or_404(OperationSortir, pk=pk)  # Récupère l'objet existant dans entrer
-    if request.method == 'POST':
-        form = OperationSortirForm(request.POST, request.FILES, instance=sortie)  # Charge les données POST
-        if form.is_valid():
-            form.save()  # Sauvegarde les modifications
-            return redirect('listeoperation')  # Redirige vers la liste des opérations (corrigez selon votre URL pattern)
-    else:
-        form = OperationEntrerForm(instance=sortie)  # Formulaire pré-rempli avec les données actuelles
-
-    return render(request, 'modifier_sortie.html', {'form': form, 'sortie': sortie})
-
-# Supprimer une opération
+    try:
+        sortie = get_object_or_404(OperationSortir, pk=pk)  # Récupère l'objet existant
+        if request.method == 'POST':
+            form = OperationSortirForm(request.POST, request.FILES, instance=sortie)
+            if form.is_valid():
+                form.save()  # Sauvegarde les modifications
+                return JsonResponse({"status": "success", "message": "La sortie a été modifiée avec succès."})
+            else:
+                return JsonResponse({"status": "error", "message": "Les données du formulaire ne sont pas valides."})
+        else:
+            return JsonResponse({"status": "error", "message": "La méthode HTTP doit être POST."})
+    except Exception as e:
+        return JsonResponse({"status": "error", "message": str(e)})
+    
+#Suppression des sorties
 def suppression_sortie(request, id):
-    if request.method == 'POST':
+    try:
+        # Rechercher l'opération à supprimer
         suppr = OperationSortir.objects.get(pk=id)
+        
+        # Supprimer l'opération
         suppr.delete()
-        return redirect('listeoperation')
+
+        # Retourner une réponse JSON indiquant que la suppression a réussi
+        return JsonResponse({"status": "success", "message": "L'opération a été supprimée avec succès."})
+
+    except OperationSortir.DoesNotExist:
+        # Retourner une réponse JSON indiquant que l'opération n'existe pas
+        return JsonResponse({"status": "error", "message": "L'opération n'existe pas."})
+
+    except Exception as e:
+        # En cas d'erreur générale, retourner une réponse JSON avec le message d'erreur
+        return JsonResponse({"status": "error", "message": str(e)})
     
 #Pour générer un rapport en EXCEL (.xlsx)
 def generer_excel_operations(request):
