@@ -24,7 +24,12 @@ import os
 from reportlab.lib.styles import getSampleStyleSheet
 from django.contrib.auth.decorators import permission_required
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer
+from rest_framework import status
+from django.db.models import Sum
+from django.utils import timezone
+from datetime import timedelta
 
 
 #Pour forcé la connexion avant d'aller dans l'acceuil
@@ -520,3 +525,218 @@ def import_data(request):
         return HttpResponse(message)
 
     return render(request, 'import_data.html')
+
+# START: New dashboard data API endpoint
+@api_view(['GET'])
+def dashboard_data(request):
+    # Get the current date
+    today = timezone.now().date()
+
+    # Calculate the start of the current month
+    start_of_month = today.replace(day=1)
+
+    # Calculate total balance
+    total_entrees = OperationEntrer.objects.aggregate(Sum('montant'))['montant__sum'] or 0
+    total_sorties = OperationSortir.objects.aggregate(Sum('montant'))['montant__sum'] or 0
+    solde_actuel = total_entrees - total_sorties
+
+    # Calculate monthly data
+    monthly_data = []
+    for i in range(12):
+        month_start = start_of_month - timedelta(days=30*i)
+        month_end = month_start + timedelta(days=30)
+        
+        entrees = OperationEntrer.objects.filter(date__range=[month_start, month_end]).aggregate(Sum('montant'))['montant__sum'] or 0
+        sorties = OperationSortir.objects.filter(date__range=[month_start, month_end]).aggregate(Sum('montant'))['montant__sum'] or 0
+        
+        monthly_data.append({
+            'month': month_start.strftime('%b'),
+            'entrees': entrees,
+            'sorties': sorties,
+            'solde': entrees - sorties
+        })
+
+    # Calculate category statistics for sorties
+    categories = OperationSortir.objects.values('categorie__name').annotate(total=Sum('montant')).order_by('-total')[:5]
+
+    # Get recent entries
+    recent_entries = OperationEntrer.objects.order_by('-date')[:4].values('date', 'montant')
+
+    data = {
+        'solde_actuel': solde_actuel,
+        'total_entrees': total_entrees,
+        'total_sorties': total_sorties,
+        'monthly_data': monthly_data,
+        'categories': list(categories),
+        'recent_entries': list(recent_entries)
+    }
+
+    return JsonResponse(data)
+# END: New dashboard data API endpoint
+
+@api_view(['GET'])
+def filter_operations(request):
+    query = request.GET.get('q', '')
+    categorie_id = request.GET.get('categorie')
+    beneficiaire_id = request.GET.get('beneficiaire')
+    fournisseur_id = request.GET.get('fournisseur')
+    date_min = request.GET.get('date_min')
+    date_max = request.GET.get('date_max')
+    montant_min = request.GET.get('montant_min')
+    montant_max = request.GET.get('montant_max')
+    operation_type = request.GET.get('type', 'all')
+
+    entrees = OperationEntrer.objects.all()
+    sorties = OperationSortir.objects.all()
+
+    if query:
+        entrees = entrees.filter(Q(description__icontains=query) | Q(categorie__name__icontains=query))
+        sorties = sorties.filter(Q(description__icontains=query) | Q(categorie__name__icontains=query))
+
+    if categorie_id:
+        entrees = entrees.filter(categorie_id=categorie_id)
+        sorties = sorties.filter(categorie_id=categorie_id)
+
+    if beneficiaire_id:
+        sorties = sorties.filter(beneficiaire_id=beneficiaire_id)
+
+    if fournisseur_id:
+        sorties = sorties.filter(fournisseur_id=fournisseur_id)
+
+    if date_min:
+        entrees = entrees.filter(date__gte=date_min)
+        sorties = sorties.filter(date__gte=date_min)
+
+    if date_max:
+        entrees = entrees.filter(date__lte=date_max)
+        sorties = sorties.filter(date__lte=date_max)
+
+    if montant_min:
+        entrees = entrees.filter(montant__gte=montant_min)
+        sorties = sorties.filter(montant__gte=montant_min)
+
+    if montant_max:
+        entrees = entrees.filter(montant__lte=montant_max)
+        sorties = sorties.filter(montant__lte=montant_max)
+
+    if operation_type == 'entrees':
+        sorties = []
+    elif operation_type == 'sorties':
+        entrees = []
+
+    entrees_data = [
+        {
+            'id': e.id,
+            'description': e.description,
+            'categorie': e.categorie.name,
+            'date': e.date,
+            'montant': e.montant,
+            'type': 'Entrée'
+        } for e in entrees
+    ]
+
+    sorties_data = [
+        {
+            'id': s.id,
+            'description': s.description,
+            'categorie': s.categorie.name,
+            'beneficiaire': s.beneficiaire.name if s.beneficiaire else None,
+            'fournisseur': s.fournisseur.name if s.fournisseur else None,
+            'date': s.date,
+            'quantite': s.quantité,
+            'montant': s.montant,
+            'type': 'Sortie'
+        } for s in sorties
+    ]
+
+    operations = entrees_data + sorties_data
+    operations.sort(key=lambda x: x['date'], reverse=True)
+
+    # Utiliser JSONRenderer pour forcer le rendu JSON
+    json_data = JSONRenderer().render(operations)
+    return HttpResponse(json_data, content_type='application/json')
+
+@api_view(['POST'])
+def api_register(request):
+    if request.method == 'POST':
+        username = request.data.get('username')
+        email = request.data.get('email')
+        password = request.data.get('password')
+        if username and email and password:
+            new_user = User.objects.create_user(username=username, email=email, password=password)
+            return Response({"message": "Utilisateur créé avec succès"}, status=status.HTTP_201_CREATED)
+        return Response({"error": "Données invalides"}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def api_login(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    user = authenticate(username=username, password=password)
+    if user:
+        login(request, user)
+        return Response({"message": "Connexion réussie"})
+    return Response({"error": "Identifiants invalides"}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+def api_logout(request):
+    logout(request)
+    return Response({"message": "Déconnexion réussie"})
+
+@api_view(['GET', 'POST'])
+@renderer_classes([JSONRenderer])
+def api_personnel(request):
+    if request.method == 'GET':
+        personnels = Personnel.objects.all()
+        data = [{"id": p.id, "nom": p.last_name, "prenom": p.first_name, "email": p.email} for p in personnels]
+        return Response(data)
+    elif request.method == 'POST':
+        form = PersonnelForm(request.data)
+        if form.is_valid():
+            personnel = form.save()
+            return Response({"id": personnel.id, "message": "Personnel ajouté avec succès"}, status=status.HTTP_201_CREATED)
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@renderer_classes([JSONRenderer])
+def api_personnel_detail(request, pk):
+    try:
+        personnel = Personnel.objects.get(pk=pk)
+    except Personnel.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        data = {"id": personnel.id, "nom": personnel.last_name, "prenom": personnel.first_name, "email": personnel.email}
+        return Response(data)
+    elif request.method == 'PUT':
+        form = PersonnelForm(request.data, instance=personnel)
+        if form.is_valid():
+            form.save()
+            return Response({"message": "Personnel modifié avec succès"})
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        personnel.delete()
+        return Response({"message": "Personnel supprimé avec succès"}, status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+@renderer_classes([JSONRenderer])
+def api_categorie(request):
+    if request.method == 'POST':
+        form = CategorieForm(request.data)
+        if form.is_valid():
+            categorie = form.save()
+            return Response({"id": categorie.id, "message": "Catégorie ajoutée avec succès"}, status=status.HTTP_201_CREATED)
+        return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@renderer_classes([JSONRenderer])
+def api_listes_operations(request):
+    entrees = OperationEntrer.objects.all()
+    sorties = OperationSortir.objects.all()
+    
+    entrees_data = [{"id": e.id, "description": e.description, "montant": e.montant, "date": e.date, "type": "Entrée"} for e in entrees]
+    sorties_data = [{"id": s.id, "description": s.description, "montant": s.montant, "date": s.date, "type": "Sortie"} for s in sorties]
+    
+    operations = entrees_data + sorties_data
+    operations.sort(key=lambda x: x['date'], reverse=True)
+    
+    return Response(operations)

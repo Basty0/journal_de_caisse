@@ -41,6 +41,22 @@ urlpatterns = [
 #Import et export des données
     path('export/', views.export_data, name='export_data'),
     path('import/', views.import_data, name='import_data'),
+
+    # START: New dashboard data API endpoint
+    path('api/dashboard-data/', views.dashboard_data, name='dashboard_data'),
+    # END: New dashboard data API endpoint
+
+    # Nouvelle URL pour l'API de filtrage
+    path('api/filter-operations/', views.filter_operations, name='filter_operations'),
+
+    # Nouvelles URLs pour les API
+    path('api/register/', views.api_register, name='api_register'),
+    path('api/login/', views.api_login, name='api_login'),
+    path('api/logout/', views.api_logout, name='api_logout'),
+    path('api/personnels/', views.api_personnel, name='api_personnel'),
+    path('api/personnels/<int:pk>/', views.api_personnel_detail, name='api_personnel_detail'),
+    path('api/categories/', views.api_categorie, name='api_categorie'),
+    path('api/operations/', views.api_listes_operations, name='api_listes_operations'),
 ]
 
 if settings.DEBUG:
