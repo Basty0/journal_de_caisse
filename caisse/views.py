@@ -241,7 +241,7 @@ def categorie(request):
         form = CategorieForm()
     return render(request, 'categorie.html', {'form': form})
 
-def ajouter_fournisseur(request):
+def fournisseur(request):
     if request.method == 'POST':
         try:
             form = FournisseurForm(request.POST)
