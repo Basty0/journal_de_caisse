@@ -91,5 +91,31 @@
         </div>
     </div>
 
+    <!-- Nouvelle div pour afficher les liens API -->
+    <div class="mt-10 bg-white shadow-md rounded-xl p-6">
+        <h2 class="text-2xl font-bold mb-4">Liens API</h2>
+        <ul class="list-disc pl-5">
+            <li><a href="{% url 'dashboard_data' %}"
+                    class="text-blue-500 hover:underline">Dashboard
+                    Data</a></li>
+            <li><a href="{% url 'filter_operations' %}"
+                    class="text-blue-500 hover:underline">Filter
+                    Operations</a></li>
+            <li><a href="{% url 'api_personnel' %}"
+                    class="text-blue-500 hover:underline">Liste du
+                    Personnel</a></li>
+            <li><a href="{% url 'api_listes_operations' %}"
+                    class="text-blue-500 hover:underline">Liste des
+                    Opérations</a></li>
+            <li><a href="{% url 'generer_excel_operations' %}"
+                    class="text-blue-500 hover:underline">Générer Excel</a></li>
+            <li><a href="{% url 'generer_pdf_operations' %}"
+                    class="text-blue-500 hover:underline">Générer PDF</a></li>
+            <li><a href="{% url 'export_data' %}"
+                    class="text-blue-500 hover:underline">Exporter les
+                    données</a></li>
+        </ul>
+    </div>
+
 </body>
 {% endblock %}

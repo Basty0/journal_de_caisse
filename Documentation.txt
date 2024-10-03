@@ -1,0 +1,209 @@
+Documentation des API pour le projet de gestion de caisse
+
+1. API de données du tableau de bord
+   Endpoint : /api/dashboard-data/
+   Méthode : GET
+   Description : Récupère les données nécessaires pour afficher le tableau de bord.
+   Paramètres : Aucun
+   Réponse :
+   {
+     "solde_actuel": float,
+     "total_entrees": float,
+     "total_sorties": float,
+     "monthly_data": [
+       {
+         "month": string,
+         "entrees": float,
+         "sorties": float,
+         "solde": float
+       },
+       ...
+     ],
+     "categories": [
+       {
+         "categorie__name": string,
+         "total": float
+       },
+       ...
+     ],
+     "recent_entries": [
+       {
+         "date": string,
+         "montant": float
+       },
+       ...
+     ]
+   }
+
+2. API de filtrage des opérations
+   Endpoint : /api/filter-operations/
+   Méthode : GET
+   Description : Filtre et récupère les opérations (entrées et sorties) selon divers critères.
+   Paramètres :
+   - q : string (terme de recherche général)
+   - categorie : int (ID de la catégorie)
+   - beneficiaire : int (ID du bénéficiaire)
+   - fournisseur : int (ID du fournisseur)
+   - date_min : string (format YYYY-MM-DD)
+   - date_max : string (format YYYY-MM-DD)
+   - montant_min : float
+   - montant_max : float
+   - type : string ('entrees', 'sorties', ou 'all')
+   Réponse : Liste d'objets représentant les opérations
+   [
+     {
+       "id": int,
+       "description": string,
+       "categorie": string,
+       "date": string,
+       "montant": float,
+       "type": string,
+       "beneficiaire": string (uniquement pour les sorties),
+       "fournisseur": string (uniquement pour les sorties),
+       "quantite": int (uniquement pour les sorties)
+     },
+     ...
+   ]
+
+3. API d'ajout d'entrée
+   Endpoint : /Ajouts_Entrer/
+   Méthode : POST
+   Description : Ajoute une nouvelle opération d'entrée.
+   Corps de la requête :
+   {
+     "description": string,
+     "categorie": int (ID de la catégorie),
+     "montant": float,
+     "date": string (format YYYY-MM-DD)
+   }
+   Réponse : Message de succès ou d'erreur en JSON
+
+4. API de modification d'entrée
+   Endpoint : /Listes_des_Opérations/modifier-entrer/<int:pk>/
+   Méthode : POST
+   Description : Modifie une opération d'entrée existante.
+   Corps de la requête : Identique à l'API d'ajout d'entrée
+   Réponse : Message de succès ou d'erreur en JSON
+
+5. API de suppression d'entrée
+   Endpoint : /Listes_des_Opérations//api/delete/<int:id>/
+   Méthode : POST
+   Description : Supprime une opération d'entrée.
+   Paramètres : id dans l'URL
+   Réponse : Message de succès ou d'erreur en JSON
+
+6. API d'ajout de sortie
+   Endpoint : /api/Ajouts_Sortie/
+   Méthode : POST
+   Description : Ajoute une nouvelle opération de sortie.
+   Corps de la requête :
+   {
+     "description": string,
+     "categorie": int (ID de la catégorie),
+     "beneficiaire": int (ID du bénéficiaire),
+     "fournisseur": int (ID du fournisseur),
+     "montant": float,
+     "date": string (format YYYY-MM-DD),
+     "quantité": int
+   }
+   Réponse : Message de succès ou d'erreur en JSON
+
+7. API de modification de sortie
+   Endpoint : /api/Listes_des_Opérations/modifier-sortie/<int:pk>/
+   Méthode : POST
+   Description : Modifie une opération de sortie existante.
+   Corps de la requête : Identique à l'API d'ajout de sortie
+   Réponse : Message de succès ou d'erreur en JSON
+
+8. API de suppression de sortie
+   Endpoint : /api/Listes_des_Opérations//delete/<int:id>/
+   Méthode : POST
+   Description : Supprime une opération de sortie.
+   Paramètres : id dans l'URL
+   Réponse : Message de succès ou d'erreur en JSON
+
+9. API de génération de rapport Excel
+   Endpoint : /generer-excel/
+   Méthode : GET
+   Description : Génère un rapport Excel des opérations.
+   Paramètres : Aucun
+   Réponse : Fichier Excel téléchargeable
+
+10. API de génération de rapport PDF
+    Endpoint : /api/generer-pdf/
+    Méthode : GET
+    Description : Génère un rapport PDF des opérations.
+    Paramètres : Aucun
+    Réponse : Fichier PDF téléchargeable
+
+11. API d'export des données
+    Endpoint : /export/
+    Méthode : GET
+    Description : Exporte toutes les données de l'application au format JSON.
+    Paramètres : Aucun
+    Réponse : Fichier JSON téléchargeable
+
+12. API d'import des données
+    Endpoint : /import/
+    Méthode : POST
+    Description : Importe des données à partir d'un fichier JSON.
+    Corps de la requête : Fichier JSON (multipart/form-data)
+    Réponse : Message de succès ou d'erreur
+
+13. API d'inscription
+    Endpoint : /api/register/
+    Méthode : POST
+    Description : Inscrit un nouvel utilisateur.
+    Corps de la requête : username, email, password
+    Réponse : Message de confirmation ou d'erreur en JSON.
+
+14. API de connexion
+    Endpoint : /api/login/
+    Méthode : POST
+    Description : Authentifie un utilisateur.
+    Corps de la requête : username, password
+    Réponse : Message de confirmation ou d'erreur en JSON.
+
+15. API de déconnexion
+    Endpoint : /api/logout/
+    Méthode : POST
+    Description : Déconnecte l'utilisateur actuel.
+    Réponse : Message de confirmation en JSON.
+
+16. API de gestion du personnel
+    Endpoint : /api/personnels/
+    Méthodes : GET, POST
+    Description : Récupère la liste du personnel ou ajoute un nouveau membre du personnel.
+    Corps de la requête (POST) : Données du formulaire PersonnelForm
+    Réponse : Liste du personnel (GET) ou confirmation d'ajout (POST) en JSON.
+
+17. API de détails du personnel
+    Endpoint : /api/personnels/<int:pk>/
+    Méthodes : GET, PUT, DELETE
+    Description : Récupère, modifie ou supprime les détails d'un membre du personnel spécifique.
+    Corps de la requête (PUT) : Données du formulaire PersonnelForm
+    Réponse : Détails du personnel (GET), confirmation de modification (PUT) ou de suppression (DELETE) en JSON.
+
+18. API d'ajout de catégorie
+    Endpoint : /api/categories/
+    Méthode : POST
+    Description : Ajoute une nouvelle catégorie.
+    Corps de la requête : Données du formulaire CategorieForm
+    Réponse : Confirmation d'ajout en JSON.
+
+19. API de liste des opérations
+    Endpoint : /api/operations/
+    Méthode : GET
+    Description : Récupère la liste de toutes les opérations (entrées et sorties).
+    Réponse : Liste JSON des opérations triées par date.
+
+Notes importantes :
+- Toutes les API renvoient des réponses au format JSON, sauf indication contraire.
+- Les API nécessitant une authentification doivent inclure le token d'authentification dans l'en-tête de la requête.
+- Pour les opérations de création et de modification, veillez à respecter les types de données attendus pour chaque champ.
+- En cas d'erreur, vérifiez le message d'erreur renvoyé dans la réponse JSON pour plus de détails.
+- L'API de filtrage des opérations permet de combiner plusieurs paramètres pour affiner les résultats.
+- Assurez-vous d'utiliser les méthodes HTTP appropriées pour chaque endpoint.
+- Les dates doivent être au format YYYY-MM-DD pour les requêtes.
+- Les API de génération de rapports (Excel et PDF) renvoient directement les fichiers à télécharger.
+
