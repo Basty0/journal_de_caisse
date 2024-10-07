@@ -60,25 +60,12 @@ def login_view(request):
         form = LoginForm()
     
     return render(request, 'connexion.html', {'form': form})
- #if request.method == 'POST':
-           # username = request.POST['username']
-            #password = request.POST['password']
-           # user = authenticate(username=username, password=password)
-            #if user is not None:
-             #   login(request, user)
-              #  return render(request, 'acceuil.html')
-            #else:
-             #   messages.error(request,'Identifiant ou mot de passe incorrect')
-              #  return redirect('connexion')
-            
-# return render(<request, 'connexion.html')
+
 
 def logOut(request):
     logout(request)
     return redirect('acceuil')
 
-#def ajoutperso(request):
-    # return render(request, 'personnels.html')
 
 # Pour voir la liste des personnel
 def listePersonnels(request):
@@ -116,10 +103,10 @@ def ajoutperso(request):
 
 #Les informations sur le personnel choisi
 def details(request, id):
-  x = Personnel.objects.get(id=id)
-  template = loader.get_template('detailsperso.html')
-  context = {'x': x,}
-  return HttpResponse(template.render(context, request))    
+    personnels = Personnel.objects.get(id=id)
+    template = loader.get_template('detailsperso.html')
+    context = {'personnels': personnels}
+    return HttpResponse(template.render(context, request))    
 
 def modifier_personnel(request, pk):
     personnels = get_object_or_404(Personnel, pk=pk)  # Récupère l'objet existant
@@ -153,7 +140,6 @@ def listes_operations(request):
     quantite_min = request.GET.get('quantite_min')
     quantite_max = request.GET.get('quantite_max')
 
-   
     sort_by = request.GET.get('sort', 'date')  # Trier par date par défaut
 
     # Filtrer les opérations d'entrée
@@ -205,10 +191,6 @@ def listes_operations(request):
 
     if quantite_max:
         sortie = sortie.filter(quantité__lte=quantite_max)
-
-    # Appliquer le triage sur les opérations (catégorie, bénéficiaire, fournisseur, montant, date, quantité)
-    entree = entree.order_by(sort_by)
-    sortie = sortie.order_by(sort_by)
 
     # Appliquer le triage sur les opérations (catégorie, bénéficiaire, fournisseur, montant, date, quantité)
     entree = entree.order_by(sort_by)
@@ -754,3 +736,166 @@ def api_listes_operations(request):
     operations.sort(key=lambda x: x['date'], reverse=True)
     
     return Response(operations)
+
+# Historique catégorie
+@api_view(['GET'])
+def api_categorie_history(request, pk):
+    try:
+        categorie = Categorie.objects.get(pk=pk)
+    except Categorie.DoesNotExist:
+        return JsonResponse({'error': 'Catégorie non trouvée'}, status=404)
+
+    history_entries = categorie.history.all()
+    history_data = []
+
+    for entry in history_entries:
+        history_data.append({
+            'id': entry.id,
+            'name': entry.name,
+            'description': entry.description,
+            'date_modification': entry.history_date,
+            'modifié_par': entry.history_user.username if entry.history_user else None,
+            'type_modification': entry.get_history_type_display(),
+        })
+
+    return JsonResponse(history_data, safe=False)
+
+@api_view(['GET'])
+def api_operation_sortir_history(request, pk):
+    try:
+        operation = OperationSortir.objects.get(pk=pk)
+    except OperationSortir.DoesNotExist:
+        return JsonResponse({'error': 'Opération non trouvée'}, status=404)
+
+    history_entries = operation.history.all()
+    history_data = []
+
+    for entry in history_entries:
+        history_data.append({
+            'id': entry.id,
+            'description': entry.description,
+            'montant': entry.montant,
+            'date_de_sortie': entry.date_de_sortie,
+            'categorie': entry.categorie.name if entry.categorie else None,
+            'beneficiaire': entry.beneficiaire.name if entry.beneficiaire else None,
+            'fournisseur': entry.fournisseur.name if entry.fournisseur else None,
+            'date_modification': entry.history_date,
+            'modifié_par': entry.history_user.username if entry.history_user else None,
+            'type_modification': entry.get_history_type_display(),
+        })
+
+    return JsonResponse(history_data, safe=False)
+
+@api_view(['GET'])
+def api_operation_entrer_history(request, pk):
+    try:
+        operation = OperationEntrer.objects.get(pk=pk)
+    except OperationEntrer.DoesNotExist:
+        return JsonResponse({'error': 'Opération non trouvée'}, status=404)
+
+    history_entrer = operation.history.all()
+    history_data = []
+
+    for entry in history_entrer:
+        history_data.append({
+            'id': entry.id,
+            'description': entry.description,
+            'montant': entry.montant,
+            'date_transaction': entry.date_transaction,
+            'categorie': entry.categorie.name if entry.categorie else None,
+            'date_modification': entry.history_date,
+            'modifié_par': entry.history_user.username if entry.history_user else None,
+            'type_modification': entry.get_history_type_display(),
+        })
+
+    return JsonResponse(history_data, safe=False)
+
+@api_view(['GET'])
+def historique_personnel(request, pk):
+    try:
+        personnel = Personnel.objects.get(pk=pk)
+    except Personnel.DoesNotExist:
+        return JsonResponse({'error': 'Personnel non trouvé'}, status=404)
+
+    history_entries = personnel.history.all()
+    history_data = []
+
+    for entry in history_entries:
+        history_data.append({
+            'id': entry.id,
+            'last_name': entry.last_name,
+            'first_name': entry.first_name,
+            'email': entry.email,
+            'tel': entry.tel,
+            'date_modification': entry.history_date,
+            'modifié_par': entry.history_user.username if entry.history_user else None,
+            'type_modification': entry.get_history_type_display(),
+        })
+
+    return JsonResponse(history_data, safe=False)
+
+@api_view(['GET'])
+def api_fournisseur_history(request, pk):
+    try:
+        fournisseur = Fournisseur.objects.get(pk=pk)
+    except Fournisseur.DoesNotExist:
+        return JsonResponse({'error': 'Fournisseur non trouvé'}, status=404)
+
+    history_entries = fournisseur.history.all()
+    history_data = []
+
+    for entry in history_entries:
+        history_data.append({
+            'id': entry.id,
+            'name': entry.name,
+            'contact': entry.contact,
+            'date_modification': entry.history_date,
+            'modifié_par': entry.history_user.username if entry.history_user else 'Inconnu',
+            'type_modification': entry.get_history_type_display(),
+        })
+
+    return JsonResponse(history_data, safe=False)
+
+@api_view(['GET'])
+def api_beneficiaire_history(request, pk):
+    try:
+        beneficiaire = Beneficiaire.objects.get(pk=pk)
+    except Beneficiaire.DoesNotExist:
+        return JsonResponse({'error': 'Bénéficiaire non trouvé'}, status=404)
+
+    history_entries = beneficiaire.history.all()
+    history_data = []
+
+    for entry in history_entries:
+        history_data.append({
+            'id': entry.id,
+            'name': entry.name,
+            'personnel': str(entry.personnel) if entry.personnel else None,
+            'date_modification': entry.history_date,
+            'modifié_par': entry.history_user.username if entry.history_user else 'Inconnu',
+            'type_modification': entry.get_history_type_display(),
+        })
+
+    return JsonResponse(history_data, safe=False)
+
+@api_view(['GET'])
+def api_caisse_history(request, pk):
+    try:
+        caisse = Caisse.objects.get(pk=pk)
+    except Caisse.DoesNotExist:
+        return JsonResponse({'error': 'Caisse non trouvée'}, status=404)
+
+    history_entries = caisse.history.all()
+    history_data = []
+
+    for entry in history_entries:
+        history_data.append({
+            'id': entry.id,
+            'montant': entry.montant,
+            'date_creation': entry.date_creation,
+            'date_modification': entry.history_date,
+            'modifié_par': entry.history_user.username if entry.history_user else 'Inconnu',
+            'type_modification': entry.get_history_type_display(),
+        })
+
+    return JsonResponse(history_data, safe=False)

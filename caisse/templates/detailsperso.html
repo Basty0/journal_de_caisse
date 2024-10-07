@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détails sur {{ x.last_name }} </title>
+    <title>Détails sur {{ personnels.last_name }} </title>
 </head>
 <body>
     <center>
+        {% for x in personnels %}
     <h1>DETAILS sur {{ x.last_name }} </h1><br>
 
     <h2>{{ x.last_name }} {{ x.first_name }}</h2>
@@ -22,6 +23,7 @@
     
     <a style="text-decoration: none" href="{% url 'modifier_personnel' x.id %}">Modifier</a>
     <p>Back to <a href="{% url 'personnelsliste' %}">Listes des personnels</a></p>
+    {% endfor %}
 </center>
     </body>
     </html>

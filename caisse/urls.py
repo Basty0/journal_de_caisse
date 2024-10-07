@@ -57,6 +57,27 @@ urlpatterns = [
     path('api/personnels/<int:pk>/', views.api_personnel_detail, name='api_personnel_detail'),
     path('api/categories/', views.api_categorie, name='api_categorie'),
     path('api/operations/', views.api_listes_operations, name='api_listes_operations'),
+    
+    # Historique pour Personnel
+    path('api/personnels/<int:pk>/history/', views.historique_personnel, name='api_personnel_history'),
+
+    # Historique pour OperationEntrer
+    path('api/operations_entrer/<int:pk>/history/', views.api_operation_entrer_history, name='api_operation_entrer_history'),
+
+    # Historique pour OperationSortir
+    path('api/operations_sortir/<int:pk>/history/', views.api_operation_sortir_history, name='api_operation_sortir_history'),
+
+    # Historique pour Categorie
+    path('api/categories/<int:pk>/history/', views.api_categorie_history, name='api_categorie_history'),
+    
+    # Historique pour Fournisseur
+    path('api/fournisseurs/<int:pk>/history/', views.api_fournisseur_history, name='api_fournisseur_history'),
+
+    # Historique pour Beneficiaire
+    path('api/beneficiaires/<int:pk>/history/', views.api_beneficiaire_history, name='api_beneficiaire_history'),
+
+    # Historique pour Caisse
+    path('api/caisses/<int:pk>/history/', views.api_caisse_history, name='api_caisse_history'),
 ]
 
 if settings.DEBUG:
