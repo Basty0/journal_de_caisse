@@ -6,8 +6,15 @@ from django.db import models
 from django.contrib.auth.models import User
 # Pour enregistrer les historiques
 from simple_history.models import HistoricalRecords
+from django.contrib.auth.models import AbstractUser
 
-
+#Pour ajouter une colonne dans User
+class CustomUser(AbstractUser):
+    photo_de_profil = models.ImageField(upload_to='photos/', blank=True, default="photos/pdp_defaut.png")
+    history = HistoricalRecords()
+    
+    def __str__(self):
+        return self.username
 
 # Modèle Category - Catégorie des transactions
 class Categorie(models.Model):

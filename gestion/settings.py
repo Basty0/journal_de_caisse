@@ -141,4 +141,5 @@ LOGIN_REDIRECT_URL = ''
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'caisse/media')
 
-
+#Le chemin du CustomUser
+AUTH_USER_MODEL = 'caisse.CustomUser'
