@@ -69,7 +69,7 @@ class Personnel(models.Model):
             raise ValidationError('La date de naissance doit être dans le passé.')
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+        return f"{self.last_name} {self.first_name}"
 
 
 # Modèle Fournisseur
@@ -95,12 +95,25 @@ class Beneficiaire(models.Model):
         (M, 'Moto'),
     ]
 
-    name = models.CharField(max_length=50, choices=BENE_CHOICES, null=True)
-    personnel = models.ForeignKey(Personnel, on_delete=models.SET_NULL, null=True) #clé étrangère vers Personne
+    name = models.CharField(max_length=50, choices=BENE_CHOICES, blank=True)
+    personnel = models.ForeignKey(Personnel, on_delete=models.PROTECT, blank=True, null=True) #clé étrangère vers Personne
     history = HistoricalRecords()
-
+    
     def __str__(self):
-        return self.name
+        # Si un name est défini, le retourner
+        if self.name:
+            return self.name
+        # Si un personnel est défini, formater et retourner son nom complet ou toute autre propriété que tu souhaites
+        elif self.personnel:
+            return str(self.personnel)  # Par exemple, utiliser la méthode __str__ de l'objet Personnel
+        # Si ni name ni personnel n'est défini, retourner une chaîne vide ou autre valeur par défaut
+
+    # Méthode pour définir le nom si non défini lors de la création d'un objet
+    def save(self, *args, **kwargs):
+        # Si name n'est pas défini mais personnel l'est, définir name comme étant une chaîne formatée de personnel
+        if not self.name and self.personnel:
+            self.name = str(self.personnel)
+        super(Beneficiaire, self).save(*args, **kwargs)
 
 # Modèle pour les opérations (entrées et sorties)
 # Modèle pour les entrées
@@ -126,13 +139,13 @@ class OperationSortir(models.Model):
     date_de_sortie = models.DateField(default=timezone.now)
     quantité = models.DecimalField(max_digits=10, decimal_places=0, default=1)
     categorie = models.ForeignKey(Categorie, on_delete=models.PROTECT, null=False)  # Clé étrangère vers Categorie
-    beneficiaire = models.ForeignKey(Beneficiaire, on_delete=models.CASCADE, null=False) #clé étrangère vers Personnel
-    fournisseur = models.ForeignKey(Fournisseur, on_delete=models.CASCADE, null=False) #clé étrangère vers Fournisseur
+    beneficiaire = models.ForeignKey(Beneficiaire, on_delete=models.PROTECT, null=False) #clé étrangère vers Personnel
+    fournisseur = models.ForeignKey(Fournisseur, on_delete=models.PROTECT, null=False) #clé étrangère vers Fournisseur
     history = HistoricalRecords()
 
 
     def __str__(self):
-        return f"{self.description} - {self.montant}"   
+        return f"{self.description} - {self.montant} - {self.beneficiaire}"   
 
 # Modèle Caisse
 class Caisse(models.Model):

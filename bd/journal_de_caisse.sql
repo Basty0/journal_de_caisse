@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 25 sep. 2024 à 13:05
+-- Généré le : ven. 11 oct. 2024 à 06:28
 -- Version du serveur : 8.0.31
 -- Version de PHP : 8.0.26
 
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   KEY `auth_permission_content_type_id_2f476e4b` (`content_type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `auth_permission`
@@ -86,137 +86,78 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (10, 'Can change group', 3, 'change_group'),
 (11, 'Can delete group', 3, 'delete_group'),
 (12, 'Can view group', 3, 'view_group'),
-(13, 'Can add user', 4, 'add_user'),
-(14, 'Can change user', 4, 'change_user'),
-(15, 'Can delete user', 4, 'delete_user'),
-(16, 'Can view user', 4, 'view_user'),
-(17, 'Can add content type', 5, 'add_contenttype'),
-(18, 'Can change content type', 5, 'change_contenttype'),
-(19, 'Can delete content type', 5, 'delete_contenttype'),
-(20, 'Can view content type', 5, 'view_contenttype'),
-(21, 'Can add session', 6, 'add_session'),
-(22, 'Can change session', 6, 'change_session'),
-(23, 'Can delete session', 6, 'delete_session'),
-(24, 'Can view session', 6, 'view_session'),
-(25, 'Can add beneficiaire', 7, 'add_beneficiaire'),
-(26, 'Can change beneficiaire', 7, 'change_beneficiaire'),
-(27, 'Can delete beneficiaire', 7, 'delete_beneficiaire'),
-(28, 'Can view beneficiaire', 7, 'view_beneficiaire'),
-(29, 'Can add caisse', 8, 'add_caisse'),
-(30, 'Can change caisse', 8, 'change_caisse'),
-(31, 'Can delete caisse', 8, 'delete_caisse'),
-(32, 'Can view caisse', 8, 'view_caisse'),
-(33, 'Can add categorie', 9, 'add_categorie'),
-(34, 'Can change categorie', 9, 'change_categorie'),
-(35, 'Can delete categorie', 9, 'delete_categorie'),
-(36, 'Can view categorie', 9, 'view_categorie'),
-(37, 'Can add fournisseur', 10, 'add_fournisseur'),
-(38, 'Can change fournisseur', 10, 'change_fournisseur'),
-(39, 'Can delete fournisseur', 10, 'delete_fournisseur'),
-(40, 'Can view fournisseur', 10, 'view_fournisseur'),
-(41, 'Can add permission', 11, 'add_permission'),
-(42, 'Can change permission', 11, 'change_permission'),
-(43, 'Can delete permission', 11, 'delete_permission'),
-(44, 'Can view permission', 11, 'view_permission'),
-(45, 'Can add personnel', 12, 'add_personnel'),
-(46, 'Can change personnel', 12, 'change_personnel'),
-(47, 'Can delete personnel', 12, 'delete_personnel'),
-(48, 'Can view personnel', 12, 'view_personnel'),
-(49, 'Can add role', 13, 'add_role'),
-(50, 'Can change role', 13, 'change_role'),
-(51, 'Can delete role', 13, 'delete_role'),
-(52, 'Can view role', 13, 'view_role'),
-(53, 'Can add admin', 14, 'add_admin'),
-(54, 'Can change admin', 14, 'change_admin'),
-(55, 'Can delete admin', 14, 'delete_admin'),
-(56, 'Can view admin', 14, 'view_admin'),
-(57, 'Can add operation entrer', 15, 'add_operationentrer'),
-(58, 'Can change operation entrer', 15, 'change_operationentrer'),
-(59, 'Can delete operation entrer', 15, 'delete_operationentrer'),
-(60, 'Can view operation entrer', 15, 'view_operationentrer'),
-(61, 'Can add operation sortir', 16, 'add_operationsortir'),
-(62, 'Can change operation sortir', 16, 'change_operationsortir'),
-(63, 'Can delete operation sortir', 16, 'delete_operationsortir'),
-(64, 'Can view operation sortir', 16, 'view_operationsortir');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `auth_user`
---
-
-DROP TABLE IF EXISTS `auth_user`;
-CREATE TABLE IF NOT EXISTS `auth_user` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `password` varchar(128) NOT NULL,
-  `last_login` datetime(6) DEFAULT NULL,
-  `is_superuser` tinyint(1) NOT NULL,
-  `username` varchar(150) NOT NULL,
-  `first_name` varchar(150) NOT NULL,
-  `last_name` varchar(150) NOT NULL,
-  `email` varchar(254) NOT NULL,
-  `is_staff` tinyint(1) NOT NULL,
-  `is_active` tinyint(1) NOT NULL,
-  `date_joined` datetime(6) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `auth_user`
---
-
-INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
-(1, 'pbkdf2_sha256$870000$IZbgvDqoEBFjjOVi8qX1ge$gLXlC2GeGPU0L9qsUt6XeiLEkGPaFXRZBh50pW5gPZQ=', '2024-09-25 05:44:15.806981', 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-09-23 12:09:56.017963');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `auth_user_groups`
---
-
-DROP TABLE IF EXISTS `auth_user_groups`;
-CREATE TABLE IF NOT EXISTS `auth_user_groups` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `group_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `auth_user_groups_user_id_group_id_94350c0c_uniq` (`user_id`,`group_id`),
-  KEY `auth_user_groups_user_id_6a12ed8b` (`user_id`),
-  KEY `auth_user_groups_group_id_97559544` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `auth_user_user_permissions`
---
-
-DROP TABLE IF EXISTS `auth_user_user_permissions`;
-CREATE TABLE IF NOT EXISTS `auth_user_user_permissions` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `permission_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `auth_user_user_permissions_user_id_permission_id_14a6b632_uniq` (`user_id`,`permission_id`),
-  KEY `auth_user_user_permissions_user_id_a95ead1b` (`user_id`),
-  KEY `auth_user_user_permissions_permission_id_1fbb5f2c` (`permission_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `caisse_admin`
---
-
-DROP TABLE IF EXISTS `caisse_admin`;
-CREATE TABLE IF NOT EXISTS `caisse_admin` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `pdp` varchar(100) DEFAULT NULL,
-  `user_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+(13, 'Can add content type', 4, 'add_contenttype'),
+(14, 'Can change content type', 4, 'change_contenttype'),
+(15, 'Can delete content type', 4, 'delete_contenttype'),
+(16, 'Can view content type', 4, 'view_contenttype'),
+(17, 'Can add session', 5, 'add_session'),
+(18, 'Can change session', 5, 'change_session'),
+(19, 'Can delete session', 5, 'delete_session'),
+(20, 'Can view session', 5, 'view_session'),
+(21, 'Can add beneficiaire', 6, 'add_beneficiaire'),
+(22, 'Can change beneficiaire', 6, 'change_beneficiaire'),
+(23, 'Can delete beneficiaire', 6, 'delete_beneficiaire'),
+(24, 'Can view beneficiaire', 6, 'view_beneficiaire'),
+(25, 'Can add caisse', 7, 'add_caisse'),
+(26, 'Can change caisse', 7, 'change_caisse'),
+(27, 'Can delete caisse', 7, 'delete_caisse'),
+(28, 'Can view caisse', 7, 'view_caisse'),
+(29, 'Can add categorie', 8, 'add_categorie'),
+(30, 'Can change categorie', 8, 'change_categorie'),
+(31, 'Can delete categorie', 8, 'delete_categorie'),
+(32, 'Can view categorie', 8, 'view_categorie'),
+(33, 'Can add fournisseur', 9, 'add_fournisseur'),
+(34, 'Can change fournisseur', 9, 'change_fournisseur'),
+(35, 'Can delete fournisseur', 9, 'delete_fournisseur'),
+(36, 'Can view fournisseur', 9, 'view_fournisseur'),
+(37, 'Can add personnel', 10, 'add_personnel'),
+(38, 'Can change personnel', 10, 'change_personnel'),
+(39, 'Can delete personnel', 10, 'delete_personnel'),
+(40, 'Can view personnel', 10, 'view_personnel'),
+(41, 'Can add user', 11, 'add_customuser'),
+(42, 'Can change user', 11, 'change_customuser'),
+(43, 'Can delete user', 11, 'delete_customuser'),
+(44, 'Can view user', 11, 'view_customuser'),
+(45, 'Can add operation entrer', 12, 'add_operationentrer'),
+(46, 'Can change operation entrer', 12, 'change_operationentrer'),
+(47, 'Can delete operation entrer', 12, 'delete_operationentrer'),
+(48, 'Can view operation entrer', 12, 'view_operationentrer'),
+(49, 'Can add operation sortir', 13, 'add_operationsortir'),
+(50, 'Can change operation sortir', 13, 'change_operationsortir'),
+(51, 'Can delete operation sortir', 13, 'delete_operationsortir'),
+(52, 'Can view operation sortir', 13, 'view_operationsortir'),
+(53, 'Can add historical beneficiaire', 14, 'add_historicalbeneficiaire'),
+(54, 'Can change historical beneficiaire', 14, 'change_historicalbeneficiaire'),
+(55, 'Can delete historical beneficiaire', 14, 'delete_historicalbeneficiaire'),
+(56, 'Can view historical beneficiaire', 14, 'view_historicalbeneficiaire'),
+(57, 'Can add historical user', 15, 'add_historicalcustomuser'),
+(58, 'Can change historical user', 15, 'change_historicalcustomuser'),
+(59, 'Can delete historical user', 15, 'delete_historicalcustomuser'),
+(60, 'Can view historical user', 15, 'view_historicalcustomuser'),
+(61, 'Can add historical fournisseur', 16, 'add_historicalfournisseur'),
+(62, 'Can change historical fournisseur', 16, 'change_historicalfournisseur'),
+(63, 'Can delete historical fournisseur', 16, 'delete_historicalfournisseur'),
+(64, 'Can view historical fournisseur', 16, 'view_historicalfournisseur'),
+(65, 'Can add historical personnel', 17, 'add_historicalpersonnel'),
+(66, 'Can change historical personnel', 17, 'change_historicalpersonnel'),
+(67, 'Can delete historical personnel', 17, 'delete_historicalpersonnel'),
+(68, 'Can view historical personnel', 17, 'view_historicalpersonnel'),
+(69, 'Can add historical operation entrer', 18, 'add_historicaloperationentrer'),
+(70, 'Can change historical operation entrer', 18, 'change_historicaloperationentrer'),
+(71, 'Can delete historical operation entrer', 18, 'delete_historicaloperationentrer'),
+(72, 'Can view historical operation entrer', 18, 'view_historicaloperationentrer'),
+(73, 'Can add historical caisse', 19, 'add_historicalcaisse'),
+(74, 'Can change historical caisse', 19, 'change_historicalcaisse'),
+(75, 'Can delete historical caisse', 19, 'delete_historicalcaisse'),
+(76, 'Can view historical caisse', 19, 'view_historicalcaisse'),
+(77, 'Can add historical categorie', 20, 'add_historicalcategorie'),
+(78, 'Can change historical categorie', 20, 'change_historicalcategorie'),
+(79, 'Can delete historical categorie', 20, 'delete_historicalcategorie'),
+(80, 'Can view historical categorie', 20, 'view_historicalcategorie'),
+(81, 'Can add historical operation sortir', 21, 'add_historicaloperationsortir'),
+(82, 'Can change historical operation sortir', 21, 'change_historicaloperationsortir'),
+(83, 'Can delete historical operation sortir', 21, 'delete_historicaloperationsortir'),
+(84, 'Can view historical operation sortir', 21, 'view_historicaloperationsortir');
 
 -- --------------------------------------------------------
 
@@ -231,14 +172,7 @@ CREATE TABLE IF NOT EXISTS `caisse_beneficiaire` (
   `personnel_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `caisse_beneficiaire_personnel_id_8a428ece` (`personnel_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `caisse_beneficiaire`
---
-
-INSERT INTO `caisse_beneficiaire` (`id`, `name`, `personnel_id`) VALUES
-(1, 'Toilette', NULL);
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -263,18 +197,83 @@ CREATE TABLE IF NOT EXISTS `caisse_caisse` (
 DROP TABLE IF EXISTS `caisse_categorie`;
 CREATE TABLE IF NOT EXISTS `caisse_categorie` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
+  `name` varchar(50) NOT NULL,
   `description` longtext,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `caisse_categorie`
 --
 
 INSERT INTO `caisse_categorie` (`id`, `name`, `description`) VALUES
-(1, 'Mensuel', ''),
-(2, 'Exeption', 'Pour les exception dans les entrées');
+(1, 'Mensuel', '');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `caisse_customuser`
+--
+
+DROP TABLE IF EXISTS `caisse_customuser`;
+CREATE TABLE IF NOT EXISTS `caisse_customuser` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `password` varchar(128) NOT NULL,
+  `last_login` datetime(6) DEFAULT NULL,
+  `is_superuser` tinyint(1) NOT NULL,
+  `username` varchar(150) NOT NULL,
+  `first_name` varchar(150) NOT NULL,
+  `last_name` varchar(150) NOT NULL,
+  `email` varchar(254) NOT NULL,
+  `is_staff` tinyint(1) NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `date_joined` datetime(6) NOT NULL,
+  `photo_de_profil` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `caisse_customuser`
+--
+
+INSERT INTO `caisse_customuser` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `photo_de_profil`) VALUES
+(1, 'pbkdf2_sha256$870000$kvR9mYUbv8KTIGowWRXvM2$QUtYCIV3DyMFjuXHXmeRWuz0KCtNc3hqIOpkocsjZr0=', '2024-10-10 12:59:49.210922', 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-10-09 13:14:11.812020', 'photos/pdp_defaut.png');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `caisse_customuser_groups`
+--
+
+DROP TABLE IF EXISTS `caisse_customuser_groups`;
+CREATE TABLE IF NOT EXISTS `caisse_customuser_groups` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `customuser_id` bigint NOT NULL,
+  `group_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `caisse_customuser_groups_customuser_id_group_id_f81af4ef_uniq` (`customuser_id`,`group_id`),
+  KEY `caisse_customuser_groups_customuser_id_b0888793` (`customuser_id`),
+  KEY `caisse_customuser_groups_group_id_927c1591` (`group_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `caisse_customuser_user_permissions`
+--
+
+DROP TABLE IF EXISTS `caisse_customuser_user_permissions`;
+CREATE TABLE IF NOT EXISTS `caisse_customuser_user_permissions` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `customuser_id` bigint NOT NULL,
+  `permission_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `caisse_customuser_user_p_customuser_id_permission_6a658c39_uniq` (`customuser_id`,`permission_id`),
+  KEY `caisse_customuser_user_permissions_customuser_id_5dab64d1` (`customuser_id`),
+  KEY `caisse_customuser_user_permissions_permission_id_68731bc2` (`permission_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -288,14 +287,247 @@ CREATE TABLE IF NOT EXISTS `caisse_fournisseur` (
   `name` varchar(50) NOT NULL,
   `contact` varchar(15) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `caisse_historicalbeneficiaire`
+--
+
+DROP TABLE IF EXISTS `caisse_historicalbeneficiaire`;
+CREATE TABLE IF NOT EXISTS `caisse_historicalbeneficiaire` (
+  `id` bigint NOT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `history_id` int NOT NULL AUTO_INCREMENT,
+  `history_date` datetime(6) NOT NULL,
+  `history_change_reason` varchar(100) DEFAULT NULL,
+  `history_type` varchar(1) NOT NULL,
+  `history_user_id` bigint DEFAULT NULL,
+  `personnel_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`history_id`),
+  KEY `caisse_historicalbeneficiaire_id_77ee5022` (`id`),
+  KEY `caisse_historicalbeneficiaire_history_date_2a0ac628` (`history_date`),
+  KEY `caisse_historicalbeneficiaire_history_user_id_b4640c8c` (`history_user_id`),
+  KEY `caisse_historicalbeneficiaire_personnel_id_d58e795f` (`personnel_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `caisse_historicalcaisse`
+--
+
+DROP TABLE IF EXISTS `caisse_historicalcaisse`;
+CREATE TABLE IF NOT EXISTS `caisse_historicalcaisse` (
+  `id` bigint NOT NULL,
+  `montant` decimal(10,2) NOT NULL,
+  `date_creation` date NOT NULL,
+  `history_id` int NOT NULL AUTO_INCREMENT,
+  `history_date` datetime(6) NOT NULL,
+  `history_change_reason` varchar(100) DEFAULT NULL,
+  `history_type` varchar(1) NOT NULL,
+  `history_user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`history_id`),
+  KEY `caisse_historicalcaisse_id_b5fb1711` (`id`),
+  KEY `caisse_historicalcaisse_history_date_8515e9bd` (`history_date`),
+  KEY `caisse_historicalcaisse_history_user_id_256381ca` (`history_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `caisse_historicalcategorie`
+--
+
+DROP TABLE IF EXISTS `caisse_historicalcategorie`;
+CREATE TABLE IF NOT EXISTS `caisse_historicalcategorie` (
+  `id` bigint NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `description` longtext,
+  `history_id` int NOT NULL AUTO_INCREMENT,
+  `history_date` datetime(6) NOT NULL,
+  `history_change_reason` varchar(100) DEFAULT NULL,
+  `history_type` varchar(1) NOT NULL,
+  `history_user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`history_id`),
+  KEY `caisse_historicalcategorie_id_65ed1d82` (`id`),
+  KEY `caisse_historicalcategorie_name_d540acef` (`name`),
+  KEY `caisse_historicalcategorie_history_date_340b904c` (`history_date`),
+  KEY `caisse_historicalcategorie_history_user_id_941c72b0` (`history_user_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Déchargement des données de la table `caisse_fournisseur`
+-- Déchargement des données de la table `caisse_historicalcategorie`
 --
 
-INSERT INTO `caisse_fournisseur` (`id`, `name`, `contact`) VALUES
-(1, 'USB', '0325007340');
+INSERT INTO `caisse_historicalcategorie` (`id`, `name`, `description`, `history_id`, `history_date`, `history_change_reason`, `history_type`, `history_user_id`) VALUES
+(1, 'Mensuel', '', 1, '2024-10-09 14:02:12.347503', NULL, '+', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `caisse_historicalcustomuser`
+--
+
+DROP TABLE IF EXISTS `caisse_historicalcustomuser`;
+CREATE TABLE IF NOT EXISTS `caisse_historicalcustomuser` (
+  `id` bigint NOT NULL,
+  `password` varchar(128) NOT NULL,
+  `last_login` datetime(6) DEFAULT NULL,
+  `is_superuser` tinyint(1) NOT NULL,
+  `username` varchar(150) NOT NULL,
+  `first_name` varchar(150) NOT NULL,
+  `last_name` varchar(150) NOT NULL,
+  `email` varchar(254) NOT NULL,
+  `is_staff` tinyint(1) NOT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `date_joined` datetime(6) NOT NULL,
+  `photo_de_profil` longtext NOT NULL,
+  `history_id` int NOT NULL AUTO_INCREMENT,
+  `history_date` datetime(6) NOT NULL,
+  `history_change_reason` varchar(100) DEFAULT NULL,
+  `history_type` varchar(1) NOT NULL,
+  `history_user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`history_id`),
+  KEY `caisse_historicalcustomuser_id_e46c96f2` (`id`),
+  KEY `caisse_historicalcustomuser_username_9360204a` (`username`),
+  KEY `caisse_historicalcustomuser_history_date_a37be0d5` (`history_date`),
+  KEY `caisse_historicalcustomuser_history_user_id_fa0563a7` (`history_user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `caisse_historicalcustomuser`
+--
+
+INSERT INTO `caisse_historicalcustomuser` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `photo_de_profil`, `history_id`, `history_date`, `history_change_reason`, `history_type`, `history_user_id`) VALUES
+(1, 'pbkdf2_sha256$870000$kvR9mYUbv8KTIGowWRXvM2$QUtYCIV3DyMFjuXHXmeRWuz0KCtNc3hqIOpkocsjZr0=', NULL, 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-10-09 13:14:11.812020', 'photos/pdp_defaut.png', 1, '2024-10-09 13:14:12.962334', NULL, '+', NULL),
+(1, 'pbkdf2_sha256$870000$kvR9mYUbv8KTIGowWRXvM2$QUtYCIV3DyMFjuXHXmeRWuz0KCtNc3hqIOpkocsjZr0=', '2024-10-09 13:14:32.204420', 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-10-09 13:14:11.812020', 'photos/pdp_defaut.png', 2, '2024-10-09 13:14:32.205458', NULL, '~', 1),
+(1, 'pbkdf2_sha256$870000$kvR9mYUbv8KTIGowWRXvM2$QUtYCIV3DyMFjuXHXmeRWuz0KCtNc3hqIOpkocsjZr0=', '2024-10-10 11:53:36.014970', 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-10-09 13:14:11.812020', 'photos/pdp_defaut.png', 3, '2024-10-10 11:53:36.014970', NULL, '~', 1),
+(1, 'pbkdf2_sha256$870000$kvR9mYUbv8KTIGowWRXvM2$QUtYCIV3DyMFjuXHXmeRWuz0KCtNc3hqIOpkocsjZr0=', '2024-10-10 11:57:58.664735', 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-10-09 13:14:11.812020', 'photos/pdp_defaut.png', 4, '2024-10-10 11:57:58.664735', NULL, '~', 1),
+(1, 'pbkdf2_sha256$870000$kvR9mYUbv8KTIGowWRXvM2$QUtYCIV3DyMFjuXHXmeRWuz0KCtNc3hqIOpkocsjZr0=', '2024-10-10 12:09:28.417566', 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-10-09 13:14:11.812020', 'photos/pdp_defaut.png', 5, '2024-10-10 12:09:28.417566', NULL, '~', 1),
+(1, 'pbkdf2_sha256$870000$kvR9mYUbv8KTIGowWRXvM2$QUtYCIV3DyMFjuXHXmeRWuz0KCtNc3hqIOpkocsjZr0=', '2024-10-10 12:24:02.513033', 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-10-09 13:14:11.812020', 'photos/pdp_defaut.png', 6, '2024-10-10 12:24:02.513033', NULL, '~', 1),
+(1, 'pbkdf2_sha256$870000$kvR9mYUbv8KTIGowWRXvM2$QUtYCIV3DyMFjuXHXmeRWuz0KCtNc3hqIOpkocsjZr0=', '2024-10-10 12:28:30.197403', 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-10-09 13:14:11.812020', 'photos/pdp_defaut.png', 7, '2024-10-10 12:28:30.197403', NULL, '~', 1),
+(1, 'pbkdf2_sha256$870000$kvR9mYUbv8KTIGowWRXvM2$QUtYCIV3DyMFjuXHXmeRWuz0KCtNc3hqIOpkocsjZr0=', '2024-10-10 12:29:57.150991', 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-10-09 13:14:11.812020', 'photos/pdp_defaut.png', 8, '2024-10-10 12:29:57.150991', NULL, '~', 1),
+(1, 'pbkdf2_sha256$870000$kvR9mYUbv8KTIGowWRXvM2$QUtYCIV3DyMFjuXHXmeRWuz0KCtNc3hqIOpkocsjZr0=', '2024-10-10 12:45:13.832538', 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-10-09 13:14:11.812020', 'photos/pdp_defaut.png', 9, '2024-10-10 12:45:13.832538', NULL, '~', 1),
+(1, 'pbkdf2_sha256$870000$kvR9mYUbv8KTIGowWRXvM2$QUtYCIV3DyMFjuXHXmeRWuz0KCtNc3hqIOpkocsjZr0=', '2024-10-10 12:59:49.210922', 1, 'bezara', '', '', 'kemulebezara205@gmail.com', 1, 1, '2024-10-09 13:14:11.812020', 'photos/pdp_defaut.png', 10, '2024-10-10 12:59:49.211920', NULL, '~', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `caisse_historicalfournisseur`
+--
+
+DROP TABLE IF EXISTS `caisse_historicalfournisseur`;
+CREATE TABLE IF NOT EXISTS `caisse_historicalfournisseur` (
+  `id` bigint NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `contact` varchar(15) NOT NULL,
+  `history_id` int NOT NULL AUTO_INCREMENT,
+  `history_date` datetime(6) NOT NULL,
+  `history_change_reason` varchar(100) DEFAULT NULL,
+  `history_type` varchar(1) NOT NULL,
+  `history_user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`history_id`),
+  KEY `caisse_historicalfournisseur_id_b40ff689` (`id`),
+  KEY `caisse_historicalfournisseur_history_date_c250a042` (`history_date`),
+  KEY `caisse_historicalfournisseur_history_user_id_d21c1aad` (`history_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `caisse_historicaloperationentrer`
+--
+
+DROP TABLE IF EXISTS `caisse_historicaloperationentrer`;
+CREATE TABLE IF NOT EXISTS `caisse_historicaloperationentrer` (
+  `id` bigint NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `montant` decimal(10,0) NOT NULL,
+  `date` date NOT NULL,
+  `date_transaction` date NOT NULL,
+  `history_id` int NOT NULL AUTO_INCREMENT,
+  `history_date` datetime(6) NOT NULL,
+  `history_change_reason` varchar(100) DEFAULT NULL,
+  `history_type` varchar(1) NOT NULL,
+  `categorie_id` bigint DEFAULT NULL,
+  `history_user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`history_id`),
+  KEY `caisse_historicaloperationentrer_id_6cdf4f7c` (`id`),
+  KEY `caisse_historicaloperationentrer_history_date_71ff1ce1` (`history_date`),
+  KEY `caisse_historicaloperationentrer_categorie_id_0bcb47f9` (`categorie_id`),
+  KEY `caisse_historicaloperationentrer_history_user_id_a191bc0c` (`history_user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Déchargement des données de la table `caisse_historicaloperationentrer`
+--
+
+INSERT INTO `caisse_historicaloperationentrer` (`id`, `description`, `montant`, `date`, `date_transaction`, `history_id`, `history_date`, `history_change_reason`, `history_type`, `categorie_id`, `history_user_id`) VALUES
+(1, 'La somme verser par mois', '5000', '2024-10-09', '2024-10-09', 1, '2024-10-09 14:02:26.922582', NULL, '+', 1, 1),
+(1, 'La somme verser par mois', '5000', '2024-10-09', '2024-10-09', 2, '2024-10-09 14:03:35.121952', NULL, '-', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `caisse_historicaloperationsortir`
+--
+
+DROP TABLE IF EXISTS `caisse_historicaloperationsortir`;
+CREATE TABLE IF NOT EXISTS `caisse_historicaloperationsortir` (
+  `id` bigint NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `montant` decimal(10,0) NOT NULL,
+  `date` date NOT NULL,
+  `date_de_sortie` date NOT NULL,
+  `quantité` decimal(10,0) NOT NULL,
+  `history_id` int NOT NULL AUTO_INCREMENT,
+  `history_date` datetime(6) NOT NULL,
+  `history_change_reason` varchar(100) DEFAULT NULL,
+  `history_type` varchar(1) NOT NULL,
+  `beneficiaire_id` bigint DEFAULT NULL,
+  `categorie_id` bigint DEFAULT NULL,
+  `fournisseur_id` bigint DEFAULT NULL,
+  `history_user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`history_id`),
+  KEY `caisse_historicaloperationsortir_id_4415aa99` (`id`),
+  KEY `caisse_historicaloperationsortir_history_date_158d135b` (`history_date`),
+  KEY `caisse_historicaloperationsortir_beneficiaire_id_ae330881` (`beneficiaire_id`),
+  KEY `caisse_historicaloperationsortir_categorie_id_15dad94b` (`categorie_id`),
+  KEY `caisse_historicaloperationsortir_fournisseur_id_3d6966be` (`fournisseur_id`),
+  KEY `caisse_historicaloperationsortir_history_user_id_c51f64e6` (`history_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `caisse_historicalpersonnel`
+--
+
+DROP TABLE IF EXISTS `caisse_historicalpersonnel`;
+CREATE TABLE IF NOT EXISTS `caisse_historicalpersonnel` (
+  `id` bigint NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `tel` varchar(15) NOT NULL,
+  `email` varchar(254) NOT NULL,
+  `date_embauche` datetime(6) NOT NULL,
+  `sexe` varchar(6) NOT NULL,
+  `date_naissance` date NOT NULL,
+  `photo` longtext NOT NULL,
+  `adresse` varchar(100) DEFAULT NULL,
+  `type_personnel` varchar(10) NOT NULL,
+  `history_id` int NOT NULL AUTO_INCREMENT,
+  `history_date` datetime(6) NOT NULL,
+  `history_change_reason` varchar(100) DEFAULT NULL,
+  `history_type` varchar(1) NOT NULL,
+  `history_user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`history_id`),
+  KEY `caisse_historicalpersonnel_id_e3451a78` (`id`),
+  KEY `caisse_historicalpersonnel_history_date_a3e73377` (`history_date`),
+  KEY `caisse_historicalpersonnel_history_user_id_d0b72144` (`history_user_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -309,20 +541,11 @@ CREATE TABLE IF NOT EXISTS `caisse_operationentrer` (
   `description` varchar(255) NOT NULL,
   `montant` decimal(10,0) NOT NULL,
   `date` date NOT NULL,
-  `categorie_id` bigint DEFAULT NULL,
   `date_transaction` date NOT NULL,
+  `categorie_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `caisse_operationentrer_Categorie_id_7870ec59` (`categorie_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `caisse_operationentrer`
---
-
-INSERT INTO `caisse_operationentrer` (`id`, `description`, `montant`, `date`, `categorie_id`, `date_transaction`) VALUES
-(1, 'La somme verser par mois', '500000', '2024-09-23', 1, '2024-09-25'),
-(2, 'La somme verser par mois', '50000', '2024-09-24', 1, '2024-09-25'),
-(5, 'Pour une exception', '30000', '2024-09-24', 2, '2024-09-25');
+  KEY `caisse_operationentrer_categorie_id_4f4798ce` (`categorie_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -334,37 +557,17 @@ DROP TABLE IF EXISTS `caisse_operationsortir`;
 CREATE TABLE IF NOT EXISTS `caisse_operationsortir` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `description` varchar(255) NOT NULL,
-  `montant` decimal(10,2) NOT NULL,
+  `montant` decimal(10,0) NOT NULL,
   `date` date NOT NULL,
   `date_de_sortie` date NOT NULL,
-  `Categorie_id` bigint DEFAULT NULL,
-  `beneficiaire_id` bigint DEFAULT NULL,
-  `fournisseur_id` bigint DEFAULT NULL,
   `quantité` decimal(10,0) NOT NULL,
+  `beneficiaire_id` bigint NOT NULL,
+  `categorie_id` bigint NOT NULL,
+  `fournisseur_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `caisse_operationsortir_Categorie_id_0714ab59` (`Categorie_id`),
   KEY `caisse_operationsortir_beneficiaire_id_72d03fa4` (`beneficiaire_id`),
+  KEY `caisse_operationsortir_categorie_id_4306e508` (`categorie_id`),
   KEY `caisse_operationsortir_fournisseur_id_85374a1a` (`fournisseur_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `caisse_operationsortir`
---
-
-INSERT INTO `caisse_operationsortir` (`id`, `description`, `montant`, `date`, `date_de_sortie`, `Categorie_id`, `beneficiaire_id`, `fournisseur_id`, `quantité`) VALUES
-(1, 'Un savon', '5000.00', '2024-09-25', '2024-09-25', 1, 1, 1, '50');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `caisse_permission`
---
-
-DROP TABLE IF EXISTS `caisse_permission`;
-CREATE TABLE IF NOT EXISTS `caisse_permission` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -381,32 +584,11 @@ CREATE TABLE IF NOT EXISTS `caisse_personnel` (
   `tel` varchar(15) NOT NULL,
   `email` varchar(254) NOT NULL,
   `date_embauche` datetime(6) NOT NULL,
-  `sexe` varchar(5) NOT NULL,
+  `sexe` varchar(6) NOT NULL,
   `date_naissance` date NOT NULL,
   `photo` varchar(100) NOT NULL,
   `adresse` varchar(100) DEFAULT NULL,
-  `type_personnel` varchar(10) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Déchargement des données de la table `caisse_personnel`
---
-
-INSERT INTO `caisse_personnel` (`id`, `last_name`, `first_name`, `tel`, `email`, `date_embauche`, `sexe`, `date_naissance`, `photo`, `adresse`, `type_personnel`) VALUES
-(8, 'BEZARA', 'Kemuel', '+261325007340', 'kemulebezara205@gmail.com', '2024-09-25 12:51:50.000000', 'Homme', '2005-08-17', 'photos/Photo_didentité_IqtGUrK.JPG', 'Diego', 'Stagiaire'),
-(7, 'ZOUBERY', 'Donaldo', '+261325007340', 'dzoubery@gmail.com', '2024-09-24 07:32:23.000000', 'Homme', '2005-08-17', 'photos/pdp_defaut.png', 'Diego', 'Bénévole');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `caisse_role`
---
-
-DROP TABLE IF EXISTS `caisse_role`;
-CREATE TABLE IF NOT EXISTS `caisse_role` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
+  `type_personnel` varchar(10) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -425,22 +607,11 @@ CREATE TABLE IF NOT EXISTS `django_admin_log` (
   `action_flag` smallint UNSIGNED NOT NULL,
   `change_message` longtext NOT NULL,
   `content_type_id` int DEFAULT NULL,
-  `user_id` int NOT NULL,
+  `user_id` bigint NOT NULL,
   PRIMARY KEY (`id`),
   KEY `django_admin_log_content_type_id_c4bce8eb` (`content_type_id`),
   KEY `django_admin_log_user_id_c564eba6` (`user_id`)
 ) ;
-
---
--- Déchargement des données de la table `django_admin_log`
---
-
-INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES
-(1, '2024-09-25 11:28:33.902249', '1', 'Toilette', 1, '[{\"added\": {}}]', 7, 1),
-(2, '2024-09-25 11:29:12.821225', '1', 'Un savon - 500', 1, '[{\"added\": {}}]', 16, 1),
-(3, '2024-09-25 11:37:58.017024', '1', 'Kemuel BEZARA', 3, '', 12, 1),
-(4, '2024-09-25 11:38:28.024487', '1', 'Un savon - 500', 2, '[]', 16, 1),
-(5, '2024-09-25 11:38:38.731111', '1', 'Un savon - 5000', 2, '[{\"changed\": {\"fields\": [\"Montant\"]}}]', 16, 1);
 
 -- --------------------------------------------------------
 
@@ -455,7 +626,7 @@ CREATE TABLE IF NOT EXISTS `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `django_content_type`
@@ -465,19 +636,24 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (1, 'admin', 'logentry'),
 (2, 'auth', 'permission'),
 (3, 'auth', 'group'),
-(4, 'auth', 'user'),
-(5, 'contenttypes', 'contenttype'),
-(6, 'sessions', 'session'),
-(7, 'caisse', 'beneficiaire'),
-(8, 'caisse', 'caisse'),
-(9, 'caisse', 'categorie'),
-(10, 'caisse', 'fournisseur'),
-(11, 'caisse', 'permission'),
-(12, 'caisse', 'personnel'),
-(13, 'caisse', 'role'),
-(14, 'caisse', 'admin'),
-(15, 'caisse', 'operationentrer'),
-(16, 'caisse', 'operationsortir');
+(4, 'contenttypes', 'contenttype'),
+(5, 'sessions', 'session'),
+(6, 'caisse', 'beneficiaire'),
+(7, 'caisse', 'caisse'),
+(8, 'caisse', 'categorie'),
+(9, 'caisse', 'fournisseur'),
+(10, 'caisse', 'personnel'),
+(11, 'caisse', 'customuser'),
+(12, 'caisse', 'operationentrer'),
+(13, 'caisse', 'operationsortir'),
+(14, 'caisse', 'historicalbeneficiaire'),
+(15, 'caisse', 'historicalcustomuser'),
+(16, 'caisse', 'historicalfournisseur'),
+(17, 'caisse', 'historicalpersonnel'),
+(18, 'caisse', 'historicaloperationentrer'),
+(19, 'caisse', 'historicalcaisse'),
+(20, 'caisse', 'historicalcategorie'),
+(21, 'caisse', 'historicaloperationsortir');
 
 -- --------------------------------------------------------
 
@@ -492,44 +668,33 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Déchargement des données de la table `django_migrations`
 --
 
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
-(1, 'contenttypes', '0001_initial', '2024-09-23 12:08:26.774206'),
-(2, 'auth', '0001_initial', '2024-09-23 12:08:27.687239'),
-(3, 'admin', '0001_initial', '2024-09-23 12:08:27.985469'),
-(4, 'admin', '0002_logentry_remove_auto_add', '2024-09-23 12:08:27.985469'),
-(5, 'admin', '0003_logentry_add_action_flag_choices', '2024-09-23 12:08:28.007576'),
-(6, 'contenttypes', '0002_remove_content_type_name', '2024-09-23 12:08:28.129315'),
-(7, 'auth', '0002_alter_permission_name_max_length', '2024-09-23 12:08:28.180751'),
-(8, 'auth', '0003_alter_user_email_max_length', '2024-09-23 12:08:28.263420'),
-(9, 'auth', '0004_alter_user_username_opts', '2024-09-23 12:08:28.263420'),
-(10, 'auth', '0005_alter_user_last_login_null', '2024-09-23 12:08:28.339865'),
-(11, 'auth', '0006_require_contenttypes_0002', '2024-09-23 12:08:28.341861'),
-(12, 'auth', '0007_alter_validators_add_error_messages', '2024-09-23 12:08:28.349948'),
-(13, 'auth', '0008_alter_user_username_max_length', '2024-09-23 12:08:28.414368'),
-(14, 'auth', '0009_alter_user_last_name_max_length', '2024-09-23 12:08:28.480839'),
-(15, 'auth', '0010_alter_group_name_max_length', '2024-09-23 12:08:28.536888'),
-(16, 'auth', '0011_update_proxy_permissions', '2024-09-23 12:08:28.547352'),
-(17, 'auth', '0012_alter_user_first_name_max_length', '2024-09-23 12:08:28.624403'),
-(18, 'caisse', '0001_initial', '2024-09-23 12:08:28.902028'),
-(19, 'caisse', '0002_alter_operationentrer_montant', '2024-09-23 12:08:28.902028'),
-(20, 'sessions', '0001_initial', '2024-09-23 12:08:28.976934'),
-(21, 'caisse', '0003_operationsortir', '2024-09-24 08:20:45.027190'),
-(22, 'caisse', '0004_alter_categorie_name', '2024-09-24 10:51:56.108059'),
-(23, 'caisse', '0005_remove_operationsortir_personnel_and_more', '2024-09-24 12:44:41.179862'),
-(24, 'caisse', '0006_alter_operationentrer_montant', '2024-09-24 13:13:55.916363'),
-(25, 'caisse', '0007_rename_categorie_operationentrer_categorie', '2024-09-24 13:31:39.306914'),
-(26, 'caisse', '0008_alter_operationentrer_categorie', '2024-09-24 13:45:43.925470'),
-(27, 'caisse', '0009_alter_operationentrer_categorie', '2024-09-24 13:50:05.969078'),
-(28, 'caisse', '0010_alter_operationentrer_categorie', '2024-09-24 13:55:08.916761'),
-(29, 'caisse', '0011_alter_operationentrer_categorie', '2024-09-24 14:09:59.533599'),
-(30, 'caisse', '0012_operationentrer_date_transaction', '2024-09-25 06:24:26.294127'),
-(31, 'caisse', '0013_rename_date_achat_operationsortir_date_de_sortie_and_more', '2024-09-25 06:55:56.391936');
+(1, 'contenttypes', '0001_initial', '2024-10-08 13:59:16.521060'),
+(2, 'contenttypes', '0002_remove_content_type_name', '2024-10-08 13:59:16.781858'),
+(3, 'auth', '0001_initial', '2024-10-08 13:59:17.979935'),
+(4, 'auth', '0002_alter_permission_name_max_length', '2024-10-08 13:59:18.184096'),
+(5, 'auth', '0003_alter_user_email_max_length', '2024-10-08 13:59:18.204734'),
+(6, 'auth', '0004_alter_user_username_opts', '2024-10-08 13:59:18.230241'),
+(7, 'auth', '0005_alter_user_last_login_null', '2024-10-08 13:59:18.260438'),
+(8, 'auth', '0006_require_contenttypes_0002', '2024-10-08 13:59:18.264839'),
+(9, 'auth', '0007_alter_validators_add_error_messages', '2024-10-08 13:59:18.294917'),
+(10, 'auth', '0008_alter_user_username_max_length', '2024-10-08 13:59:18.320165'),
+(11, 'auth', '0009_alter_user_last_name_max_length', '2024-10-08 13:59:18.344564'),
+(12, 'auth', '0010_alter_group_name_max_length', '2024-10-08 13:59:18.520395'),
+(13, 'auth', '0011_update_proxy_permissions', '2024-10-08 13:59:18.522426'),
+(14, 'auth', '0012_alter_user_first_name_max_length', '2024-10-08 13:59:18.552578'),
+(15, 'caisse', '0001_initial', '2024-10-08 13:59:21.428604'),
+(16, 'admin', '0001_initial', '2024-10-08 13:59:22.207212'),
+(17, 'admin', '0002_logentry_remove_auto_add', '2024-10-08 13:59:22.235605'),
+(18, 'admin', '0003_logentry_add_action_flag_choices', '2024-10-08 13:59:22.270923'),
+(19, 'sessions', '0001_initial', '2024-10-08 13:59:22.456457'),
+(20, 'caisse', '0002_historicalbeneficiaire_historicalcaisse_and_more', '2024-10-08 14:01:10.745133');
 
 -- --------------------------------------------------------
 
@@ -551,7 +716,9 @@ CREATE TABLE IF NOT EXISTS `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
-('goibhq2xqs8n3sklxhgnhnr39bb9dwks', '.eJxVjEEOwiAQRe_C2hAGh8K4dN8zEGBQqgaS0q6MdzckXej2v_f-W_iwb8XvPa9-YXERIE6_WwzpmesA_Aj13mRqdVuXKIciD9rl3Di_rof7d1BCL6MmVJM17EgrYHaI6FLGpMEpRAtoDHI28UaGEENyRJaYwhkmINBafL6vbDZC:1stKox:Qr4t2gYs_C1L_4yBpntGQZNznApkgh5OL8LI_IVNHZ4', '2024-10-09 05:44:15.814817');
+('oaa2ouwsf68e57np9qtj7qwg2433938f', '.eJxVjMsOwiAQRf-FtSG8YVy69xsIDINUDU1KuzL-uzbpQrf3nHNfLKZtbXEbtMSpsDOT7PS75YQP6jso99RvM8e5r8uU-a7wgw5-nQs9L4f7d9DSaN_aC1tJZYlQrfMqoAtOB42gg0ICCxmQpNO-GHBS2WBEMoTGgqgJS2XvD8Y-N2Y:1syWWO:paOuZelMrTXnvkLEHpJ-z2fp6h_qInhXGYZYaVMDwbg', '2024-10-23 13:14:32.267636'),
+('73mdb2l399c70z2lz2xbkbwg1rw7v2wl', '.eJxVjMsOwiAQRf-FtSG8YVy69xsIDINUDU1KuzL-uzbpQrf3nHNfLKZtbXEbtMSpsDOT7PS75YQP6jso99RvM8e5r8uU-a7wgw5-nQs9L4f7d9DSaN_aC1tJZYlQrfMqoAtOB42gg0ICCxmQpNO-GHBS2WBEMoTGgqgJS2XvD8Y-N2Y:1sysIn:QTXNu0CLnw_mS-M990xFf6Anc0pPQiuupt22CtBAIdY', '2024-10-24 12:29:57.150991'),
+('mpo12rlixib2te01ltvkto2rbx82ha61', '.eJxVjMsOwiAQRf-FtSG8YVy69xsIDINUDU1KuzL-uzbpQrf3nHNfLKZtbXEbtMSpsDOT7PS75YQP6jso99RvM8e5r8uU-a7wgw5-nQs9L4f7d9DSaN_aC1tJZYlQrfMqoAtOB42gg0ICCxmQpNO-GHBS2WBEMoTGgqgJS2XvD8Y-N2Y:1syslh:aRLFxE2_1Y3QIfRhJiIcnUGHOYezEknjuLGMXv8Ftoo', '2024-10-24 12:59:49.217573');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

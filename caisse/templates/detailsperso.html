@@ -7,23 +7,23 @@
 </head>
 <body>
     <center>
-        {% for x in personnels %}
-    <h1>DETAILS sur {{ x.last_name }} </h1><br>
+        
+    <h1>DETAILS sur {{ personnels.last_name }} </h1><br>
 
-    <h2>{{ x.last_name }} {{ x.first_name }}</h2>
-    <img src="{{ x.photo.url }}" alt="{{ x.last_name }}" width="150">
-    <p>Phone: {{ x.tel }}</p>
-    <p>Email: {{ x.email }}</p>
-    <p>Date de naissance: {{ x.date_naissance }}</p>
-    <p>Adresse: {{ x.adresse }}</p>
-    <p>Date d'embauche: {{ x.date_embauche }}</p>
-    <p>Type de personnel: {{ x.type_personnel }}</p>
-    <p>Genre: {{ x.sexe }}</p>
-    <p>Phone: {{ x.tel }}</p>
+    <h2>{{ personnels.last_name }} {{ personnels.first_name }}</h2>
+    <img src="{{ personnels.photo.url }}" alt="{{ personnels.last_name }} {{ personnels.first_name }}" width="150">
+    <p>Phone: {{ personnels.tel }}</p>
+    <p>Email: {{ personnels.email }}</p>
+    <p>Date de naissance: {{ personnels.date_naissance }}</p>
+    <p>Adresse: {{ personnels.adresse }}</p>
+    <p>Date d'embauche: {{ personnels.date_embauche }}</p>
+    <p>Type de personnel: {{ personnels.type_personnel }}</p>
+    <p>Genre: {{ personnels.sexe }}</p>
+    <p>Phone: {{ personnels.tel }}</p>
     
-    <a style="text-decoration: none" href="{% url 'modifier_personnel' x.id %}">Modifier</a>
+    <a style="text-decoration: none" href="{% url 'modifier_personnel' personnels.id %}">Modifier</a>
     <p>Back to <a href="{% url 'personnelsliste' %}">Listes des personnels</a></p>
-    {% endfor %}
+
 </center>
     </body>
     </html>

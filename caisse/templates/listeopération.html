@@ -49,7 +49,7 @@
     <select name="beneficiaire">
         <option value="">Tous bénéficiaires</option>
         {% for beneficiaire in beneficiaires %}
-            <option value="{{ beneficiaire.id }}" {% if request.GET.beneficiaire == beneficiaire.id|stringformat:"s" %}selected{% endif %}>{{ beneficiaire.name }}</option>
+            <option value="{{ beneficiaire.id }}" {% if request.GET.beneficiaire == beneficiaire.id|stringformat:"s" %}selected{% endif %}>{{ beneficiaire.personnel }} {{ beneficiaire.name }}</option>
         {% endfor %}
     </select>
 
@@ -116,7 +116,7 @@
                 <tr>
                     <td>{{ operation.description }}</td>
                     <td>{{ operation.categorie.name }}</td>
-                    <td>{{ operation.beneficiaire.name }}</td>
+                    <td>{{ operation.beneficiaire.personnel }} {{ operation.beneficiaire.name }}</td>
                     <td>{{ operation.fournisseur.name }}</td>
                     <td>{{ operation.date }}</td>
                     <td>{{ operation.quantité }}</td>

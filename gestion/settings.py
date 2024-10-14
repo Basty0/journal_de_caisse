@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'tailwind',
     'theme',
     'simple_history',
+    'rest_framework',
     
 ]
 

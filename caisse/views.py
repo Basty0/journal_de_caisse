@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from .forms import LoginForm, PersonnelForm, OperationEntrerForm, CategorieForm, OperationSortirForm
+from .forms import LoginForm, PersonnelForm, OperationEntrerForm, CategorieForm, OperationSortirForm, FournisseurForm
 from .models import Personnel, OperationEntrer, Categorie, OperationSortir, Fournisseur, Beneficiaire
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
@@ -224,52 +224,32 @@ def categorie(request):
         form = CategorieForm()
     return render(request, 'categorie.html', {'form': form})
 
-@api_view(['POST'])
-@renderer_classes([JSONRenderer])
 def ajouter_fournisseur(request):
     if request.method == 'POST':
-        try:
-            # Charger les données JSON reçues
-            data = json.loads(request.body)
-
-            # Valider les données manuellement
-            name = data.get('name')
-            adresse = data.get('adresse')
-            tel = data.get('tel')
-
-            if not name or not adresse or not tel:
-                return JsonResponse({"status": "error", "message": "Tous les champs sont requis."})
-
-            # Créer un nouvel objet fournisseur et l'enregistrer dans la base de données
-            fournisseur = Fournisseur(name=name, adresse=adresse, tel=tel)
-            fournisseur.save()
-
-            return JsonResponse({"status": "success", "message": "Le fournisseur a été ajouté avec succès."})
-
-        except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)})
+        form = FournisseurForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('acceuil')
     else:
-        return JsonResponse({"status": "error", "message": "La méthode HTTP doit être POST."})
+        form = FournisseurForm()
+    return render(request, 'fournisseur.html', {'form': form})
 
 # Une page pour ajouter une opération
-
 def ajouts_operations(request):
     return render(request, 'ajout_operation.html',)
 
 # Ajouter Entrer
 def ajouter_entrer(request):
     if request.method == 'POST':
-        try: 
-            form = OperationEntrerForm(request.POST)
-            if form.is_valid():
-                form.save()  # Sauvegarde les données dans la base de données
-                return JsonResponse({"status": "success", "message": "La sortie a été ajoutée avec succès."})
-            else:
-                return JsonResponse({"status": "error", "message": "Les données du formulaire ne sont pas valides."})
-        except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)})
+        form = OperationEntrerForm(request.POST)
+        if form.is_valid():
+            form.save()  # Sauvegarde les données dans la base de données
+            return redirect('listeoperation')  # Redirige vers la liste des opérations après l
+        
     else:
-        return JsonResponse({"status": "error", "message": "La méthode HTTP doit être POST."})
+            form = OperationEntrerForm()
+
+    return render(request, 'ajouts_entrer.html', {'form': form})
 
 # Supprimer une opération
 def suppression_entrer(request, id):
@@ -281,7 +261,7 @@ def suppression_entrer(request, id):
         suppr.delete()
 
         # Retourner une réponse JSON indiquant que la suppression a réussi
-        return JsonResponse({"status": "success", "message": "L'opération a été supprimée avec succès."})
+        return redirect('listeoperation')
 
     except OperationSortir.DoesNotExist:
         # Retourner une réponse JSON indiquant que l'opération n'existe pas
@@ -293,50 +273,42 @@ def suppression_entrer(request, id):
 
 # modifier les entrées
 def modifier_entrer(request, pk):
-    try:
-        entree = get_object_or_404(OperationEntrer, pk=pk)  # Récupère l'objet existant dans entrer
-        if request.method == 'POST':
-            form = OperationEntrerForm(request.POST, request.FILES, instance=entree)  # Charge les données POST
-            if form.is_valid():
-                form.save()  # Sauvegarde les modifications
-                return JsonResponse({"status": "success", "message": "L'entrée a été modifiée avec succès."})
-            else:
-                return JsonResponse({"status": "error", "message": "Les données du formulaire ne sont pas valides."})
-        else:
-            return JsonResponse({"status": "error", "message": "La méthode HTTP doit être POST."})
-    except Exception as e:
-        return JsonResponse({"status": "error", "message": str(e)})
+    entree = get_object_or_404(OperationEntrer, pk=pk)  # Récupère l'objet existant dans entrer
+    if request.method == 'POST':
+        form = OperationEntrerForm(request.POST, request.FILES, instance=entree)  # Charge les données POST
+        if form.is_valid():
+            form.save()  # Sauvegarde les modifications
+            return redirect('listeoperation')  # Redirige vers la liste des opérations (corrigez selon votre URL pattern)
+    else:
+        form = OperationEntrerForm(instance=entree)  # Formulaire pré-rempli avec les données actuelles
+
+    return render(request, 'modifier_entrer.html', {'form': form, 'entree': entree})
     
 # Ajouter Sortie
 def ajouter_sortie(request):
     if request.method == 'POST':
-        try:
-            form = OperationSortirForm(request.POST)
-            if form.is_valid():
-                form.save()  # Sauvegarde les données dans la base de données
-                return JsonResponse({"status": "success", "message": "La sortie a été ajoutée avec succès."})
-            else:
-                return JsonResponse({"status": "error", "message": "Les données du formulaire ne sont pas valides."})
-        except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)})
+        form = OperationSortirForm(request.POST)
+        if form.is_valid():
+            form.save()  # Sauvegarde les données dans la base de données
+            return redirect('listeoperation')  # Redirige vers la liste des opérations après l
+        
     else:
-        return JsonResponse({"status": "error", "message": "La méthode HTTP doit être POST."})
+            form = OperationSortirForm()
+
+    return render(request, 'ajouts_sortie.html', {'form': form})
     
 # Modifier les sorties
 def modifier_sortie(request, pk):
-    try:
-        sortie = get_object_or_404(OperationSortir, pk=pk)  # Récupère l'objet existant
-        if request.method == 'POST':
-            form = OperationSortirForm(request.POST, request.FILES, instance=sortie)
-            if form.is_valid():
-                form.save()  # Sauvegarde les modifications
-                return JsonResponse({"status": "success", "message": "La sortie a été modifiée avec succès."})
-            else:
-                return JsonResponse({"status": "error", "message": "Les données du formulaire ne sont pas valides."})
-        else:
-            return JsonResponse({"status": "error", "message": "La méthode HTTP doit être POST."})
-    except Exception as e:
-        return JsonResponse({"status": "error", "message": str(e)})
+    sortie = get_object_or_404(OperationSortir, pk=pk)  # Récupère l'objet existant dans entrer
+    if request.method == 'POST':
+        form = OperationSortirForm(request.POST, request.FILES, instance=sortie)  # Charge les données POST
+        if form.is_valid():
+            form.save()  # Sauvegarde les modifications
+            return redirect('listeoperation')  # Redirige vers la liste des opérations
+    else:
+        form = OperationEntrerForm(instance=sortie)  # Formulaire pré-rempli avec les données actuelles
+
+    return render(request, 'modifier_sortie.html', {'form': form, 'sortie': sortie})
     
 #Suppression des sorties
 def suppression_sortie(request, id):
@@ -348,7 +320,7 @@ def suppression_sortie(request, id):
         suppr.delete()
 
         # Retourner une réponse JSON indiquant que la suppression a réussi
-        return JsonResponse({"status": "success", "message": "L'opération a été supprimée avec succès."})
+        return redirect('listeoperation')
 
     except OperationSortir.DoesNotExist:
         # Retourner une réponse JSON indiquant que l'opération n'existe pas
